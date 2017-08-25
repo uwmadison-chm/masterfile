@@ -29,6 +29,16 @@ CSV files should be comma-separated (no surprise there) and have DOS line ending
 
 Basically, you want Excel-for-Windows-style CSV files with no UTF-8 signature.
 
+## Dictionaries
+
+* CSV format
+* Has AT LEAST two columns: component, variable_short
+* Those are the indexes
+* There shouldn't be any repeats in the index
+* The settings.json file should contain a "components" thing that says what should exist in the component column
+* Things with blank component are ignored
+
+
 ## Data checks
 
 Here are some (all?) of the things to do to verify you have semantically reasonable data:
@@ -45,8 +55,10 @@ Here are some (all?) of the things to do to verify you have semantically reasona
 
 Written by Nate Vack <njvack@wisc.edu>
 
-masterfile packages two wonderful tools: [docopt](https://github.com/docopt/docopt) and [schema](https://github.com/halst/schema).
+masterfile packages some wonderful tools: [docopt](https://github.com/docopt/docopt), [schema](https://github.com/halst/schema), and [attrs](https://github.com/python-attrs/attrs).
 
 docopt is copyright (c) 2013 Vladimir Keleshev, vladimir@keleshev.com
 
 schema is copyright (c) 2012 Vladimir Keleshev, vladimir@keleshev.com
+
+attrs is copyright(c) 2015 Hynek Schlawack
