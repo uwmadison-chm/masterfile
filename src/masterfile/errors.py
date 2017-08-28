@@ -17,7 +17,7 @@ class Error(object):
 
     code = attr.ib()
 
-    filename = attr.ib()
+    location = attr.ib()
 
     message = attr.ib()
 

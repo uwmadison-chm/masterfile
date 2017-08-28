@@ -83,7 +83,7 @@ class Masterfile(object):
             except LookupError as e:
                 errors.append(Error(
                     code='E101',
-                    filename=f,
+                    location=f,
                     message='column {} not found'.format(self.index_column)))
         return (dataframes, errors)
 
