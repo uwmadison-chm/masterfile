@@ -16,10 +16,6 @@ def get_locals(filename):
 metadata = get_locals(os.path.join('src', 'masterfile', '_metadata.py'))
 
 
-def read(f):
-    return open(f, 'r').read()
-
-
 requirements = [
 ]
 
@@ -31,7 +27,6 @@ setup(
     name='masterfile',
     version=metadata['version'],
     description='Tools for organizing the variables of interest in a study',
-    long_description=read('README.md'),
     author='Nate Vack',
     author_email='njvack@wisc.edu',
     url='https://github.com/njvack/masterfile',
