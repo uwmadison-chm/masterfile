@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 author = 'Nate Vack'
 email = 'njvack@wisc.edu'
 version = '0.1.0dev'
