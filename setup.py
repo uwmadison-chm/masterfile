@@ -29,25 +29,30 @@ test_requirements = [
 
 setup(
     name='masterfile',
-    version='0.1.0dev',
-    description="Tools for organizing the variables of interest in a study",
+    version=metadata['version'],
+    description='Tools for organizing the variables of interest in a study',
     long_description=read('README.md'),
-    author="Nate Vack",
+    author='Nate Vack',
     author_email='njvack@wisc.edu',
     url='https://github.com/njvack/masterfile',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     include_package_data=True,
     install_requires=requirements,
-    license="MIT license",
+    license='MIT license',
     zip_safe=False,
     keywords='masterfile',
+    entry_points={
+        'console_scripts': {
+            'make_blank_dictionary = masterfile.scripts.make_blank_dictionary:main',
+        }
+    },
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
