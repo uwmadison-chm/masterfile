@@ -1,0 +1,7 @@
+modality,sr
+timepoint,t1
+measure,foo
+measure,bar
+variable,sum
+variable,var1
+variable,var2
