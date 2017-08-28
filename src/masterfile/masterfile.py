@@ -4,6 +4,9 @@
 """
 
 from itertools import chain
+from os import path
+import json
+from glob import glob
 
 import pandas as pd
 
@@ -18,9 +21,21 @@ class Masterfile(object):
 
     components = attr.ib()
 
+    _pathname = attr.ib(default=None)
+
     _dataframes = attr.ib(default=attr.Factory(list))
 
+    _dictionaries = attr.ib(default=attr.Factory(list))
+
     errors = attr.ib(default=attr.Factory(list))
+
+    @property
+    def dataframe(self):
+        return pd.concat(self._dataframes, axis='columns', join='outer')
+
+    @property
+    def df(self):
+        return self.dataframe
 
     @classmethod
     def load_path(klass, pathname):
@@ -29,10 +44,27 @@ class Masterfile(object):
         data and dictionaries into it.
         TODO: Implement this.
         """
-        pass
+        json_data = klass._read_settings_json(pathname)
+        mf = klass(**json_data)
+        mf._pathname = pathname
+        mf._load_all_data_files_into_dataframes()
+        return mf
 
-    def _add_csv_files_to_dataframes(self, filenames):
-        dataframes, errors = self._load_csv_files(filenames)
+    @classmethod
+    def _read_settings_json(klass, pathname):
+        """
+        load pathname/settings.json, parse it, and return a dict with its
+        contents.
+        """
+        json_filename = path.join(pathname, "settings.json")
+        return json.load(open(json_filename, 'r'))
+
+    def _load_all_data_files_into_dataframes(self):
+        files = glob(path.join(self._pathname, "*csv"))
+        self._add_data_files_to_dataframes(files)
+
+    def _add_data_files_to_dataframes(self, filenames):
+        dataframes, errors = self._load_data_files(filenames)
         self._dataframes = list(chain(self._dataframes, dataframes))
         self.errors = list(chain(self.errors, errors))
 
@@ -41,7 +73,7 @@ class Masterfile(object):
         errors = []
         for f in filenames:
             try:
-                df = self._load_csv(f)
+                df = self._load_data_csv(f)
                 dataframes.append(df)
             except LookupError as e:
                 errors.append(Error(
@@ -50,10 +82,14 @@ class Masterfile(object):
                     message='column {} not found'.format(self.index_column)))
         return (dataframes, errors)
 
-    def _load_csv(self, filename):
+    def _load_data_csv(self, filename):
         df = pd.read_csv(
             filename,
             index_col=False,
             dtype={self.index_column: str})
         df.set_index(self.index_column, inplace=True)
+        return df
+
+    def _load_dictionary_csv(self, filename):
+        df = pd.read_csv(filename, index_col=False, dtype=str)
         return df
