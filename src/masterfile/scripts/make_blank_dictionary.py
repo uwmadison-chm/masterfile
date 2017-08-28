@@ -18,6 +18,8 @@ Options:
   -v, --verbose  Display debugging output
 """
 
+from __future__ import absolute_import, unicode_literals
+
 import sys
 import logging
 from collections import defaultdict

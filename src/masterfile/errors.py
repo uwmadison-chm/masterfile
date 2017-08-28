@@ -7,8 +7,7 @@
 # Released under MIT licence; see LICENSE at the package root.
 
 
-"""
-"""
+from __future__ import absolute_import, unicode_literals
 
 from .vendor import attr
 
