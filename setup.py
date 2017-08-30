@@ -37,10 +37,10 @@ setup(
     license='MIT license',
     zip_safe=False,
     keywords='masterfile',
-    entry_points={
-        'console_scripts': {
+    entry_points={'console_scripts': [
             'make_blank_dictionary = masterfile.scripts.make_blank_dictionary:main',
-        }
+            'extract_masterfile_data = masterfile.scripts.extract_masterfile_data:main'
+        ]
     },
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
