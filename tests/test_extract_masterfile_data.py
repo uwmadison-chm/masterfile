@@ -40,3 +40,17 @@ def test_skip_rows_skips(df):
 def test_with_index_col_reorders(df):
     df2 = extract_masterfile_data._with_index_col_first(df, 'thing1')
     assert df2.columns[0] == 'thing1'
+
+
+def test_roundtrip(capsys):
+    extract_masterfile_data.main([
+        '--index_column=id_number',
+        '--skip=1',
+        GOOD_PATH,
+        INPUT_FILE])
+    out, err = capsys.readouterr()
+    lines = out.split('\r\n')
+    assert len(lines) == 11
+    assert lines[-1] == ''
+    columns = lines[0].split(',')
+    assert columns[0] == 'ppt_id'

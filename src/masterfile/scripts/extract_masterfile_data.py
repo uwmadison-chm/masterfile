@@ -25,7 +25,7 @@ always be skipped, since they don't make any sense in the masterfile data.
 
 Options:
   --index_column=<col>  Use <col> as the input's index column
-  --skip=<rows>         Skip <rows> data columns [default=0]
+  --skip=<rows>         Skip <rows> data columns [default: 0]
   -v, --verbose         Display debugging output
 """
 
@@ -55,7 +55,7 @@ def main(argv=None):
     mf = Masterfile.load_path(pargs['<masterfile_path>'])
     formatted = format_dataframe_for_masterfile(
         df, mf, pargs['--index_column'], int(pargs['--skip']))
-    formatted.to_csv(sys.stdout, line_terminator='\r\n')
+    formatted.to_csv(sys.stdout, line_terminator='\r\n', index=False)
 
 
 def format_dataframe_for_masterfile(df, mf, input_index_col, skip_rows):
@@ -66,21 +66,24 @@ def format_dataframe_for_masterfile(df, mf, input_index_col, skip_rows):
     * only the columns that match the format (c1_c2_..._cN) included
     * rows with index_col as blank excluded
     """
+    index_col = mf.index_column
     logger.debug('Original columns: {}'.format(df.columns))
     logger.debug('Original has {} rows'.format(len(df)))
     col_rx = col_match_regex(mf, input_index_col)
     logger.debug('Column regex: {}'.format(col_rx))
     col_filtered = df.filter(regex=col_rx)
-    renamed = col_filtered.rename(columns={input_index_col: mf.index_col})
-    ordered = _with_index_col_first(renamed, mf.index_col)
+    renamed = col_filtered.rename(columns={input_index_col: index_col})
+    ordered = _with_index_col_first(renamed, index_col)
     logger.debug('New columns: {}'.format(ordered.columns))
-    row_filtered = _filter_rows(ordered, mf.index_col, skip_rows)
+    row_filtered = _filter_rows(ordered, index_col, skip_rows)
     logger.debug('Now has {} rows'.format(len(row_filtered)))
     return row_filtered
 
 
 def _with_index_col_first(df, index_col):
     clist = list(df.columns)
+    logger.debug('Moving {} to first column'.format(index_col))
+    logger.debug(clist)
     clist.remove(index_col)
     clist.insert(0, index_col)
     return df.reindex_axis(clist, axis=1)
@@ -105,7 +108,7 @@ def component_col_regex(component_count):
     """
     Match things like 'foo_bar_baz_corge'
     """
-    return '_'.join(['[^_]+'])
+    return '_'.join((['[^_]+'] * component_count))
 
 
 if __name__ == '__main__':
