@@ -18,58 +18,53 @@ from masterfile.masterfile import Masterfile
 INPUT_FILE = path.join(EXAMPLE_PATH, 'foo_input.csv')
 
 
-@pytest.fixture
-def df():
-    return pd.read_csv(INPUT_FILE, dtype=str)
 
+class TestExtractMasterfileData(object):
 
-@pytest.fixture
-def mf():
-    return Masterfile.load_path(GOOD_PATH)
+    @pytest.fixture
+    def df(self):
+        return pd.read_csv(INPUT_FILE, dtype=str)
 
+    @pytest.fixture
+    def mf(self):
+        return Masterfile.load_path(GOOD_PATH)
 
-def test_raises_on_empty_params():
-    with pytest.raises(SystemExit):
-        extract_masterfile_data.main([])
+    def test_raises_on_empty_params(self):
+        with pytest.raises(SystemExit):
+            extract_masterfile_data.main([])
 
+    def test_skip_rows_excludes_blanks(self, df):
+        df2 = extract_masterfile_data._filter_rows(df, 'id_number', 0)
+        assert len(df2) == (len(df) - 1)
 
-def test_skip_rows_excludes_blanks(df):
-    df2 = extract_masterfile_data._filter_rows(df, 'id_number', 0)
-    assert len(df2) == (len(df) - 1)
+    def test_skip_rows_skips(self, df):
+        df2 = extract_masterfile_data._filter_rows(df, 'id_number', 1)
+        assert len(df2) == (len(df) - 2)
 
+    def test_sets_index_column(self, df, mf):
+        df2 = extract_masterfile_data.format_dataframe_for_masterfile(
+            df, mf, 'id_number', 1)
+        assert df2.index.name == mf.index_column
 
-def test_skip_rows_skips(df):
-    df2 = extract_masterfile_data._filter_rows(df, 'id_number', 1)
-    assert len(df2) == (len(df) - 2)
+    def test_filters_rows(self, df, mf):
+        df2 = extract_masterfile_data.format_dataframe_for_masterfile(
+            df, mf, 'id_number', 1)
+        assert len(df2) == (len(df) - 2)
 
+    def test_filters_columns(self, df, mf):
+        df2 = extract_masterfile_data.format_dataframe_for_masterfile(
+            df, mf, 'id_number', 1)
+        assert len(df2.columns) == (len(df.columns) - 3)
 
-def test_sets_index_column(df, mf):
-    df2 = extract_masterfile_data.format_dataframe_for_masterfile(
-        df, mf, 'id_number', 1)
-    assert df2.index.name == mf.index_column
-
-
-def test_filters_rows(df, mf):
-    df2 = extract_masterfile_data.format_dataframe_for_masterfile(
-        df, mf, 'id_number', 1)
-    assert len(df2) == (len(df) - 2)
-
-
-def test_filters_columns(df, mf):
-    df2 = extract_masterfile_data.format_dataframe_for_masterfile(
-        df, mf, 'id_number', 1)
-    assert len(df2.columns) == (len(df.columns) - 3)
-
-
-def test_roundtrip(capsys):
-    extract_masterfile_data.main([
-        '--index_column=id_number',
-        '--skip=1',
-        GOOD_PATH,
-        INPUT_FILE])
-    out, err = capsys.readouterr()
-    lines = out.split('\r\n')
-    assert len(lines) == 11
-    assert lines[-1] == ''
-    columns = lines[0].split(',')
-    assert columns[0] == 'ppt_id'
+    def test_roundtrip(self, capsys):
+        extract_masterfile_data.main([
+            '--index_column=id_number',
+            '--skip=1',
+            GOOD_PATH,
+            INPUT_FILE])
+        out, err = capsys.readouterr()
+        lines = out.split('\r\n')
+        assert len(lines) == 11
+        assert lines[-1] == ''
+        columns = lines[0].split(',')
+        assert columns[0] == 'ppt_id'
