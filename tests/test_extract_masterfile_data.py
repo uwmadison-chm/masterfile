@@ -13,6 +13,7 @@ from os import path
 
 from .test_masterfile import EXAMPLE_PATH, GOOD_PATH
 from masterfile.scripts import extract_masterfile_data
+from masterfile.masterfile import Masterfile
 
 INPUT_FILE = path.join(EXAMPLE_PATH, 'foo_input.csv')
 
@@ -20,6 +21,11 @@ INPUT_FILE = path.join(EXAMPLE_PATH, 'foo_input.csv')
 @pytest.fixture
 def df():
     return pd.read_csv(INPUT_FILE, dtype=str)
+
+
+@pytest.fixture
+def mf():
+    return Masterfile.load_path(GOOD_PATH)
 
 
 def test_raises_on_empty_params():
@@ -37,9 +43,22 @@ def test_skip_rows_skips(df):
     assert len(df2) == (len(df) - 2)
 
 
-def test_with_index_col_reorders(df):
-    df2 = extract_masterfile_data._with_index_col_first(df, 'thing1')
-    assert df2.columns[0] == 'thing1'
+def test_sets_index_column(df, mf):
+    df2 = extract_masterfile_data.format_dataframe_for_masterfile(
+        df, mf, 'id_number', 1)
+    assert df2.index.name == mf.index_column
+
+
+def test_filters_rows(df, mf):
+    df2 = extract_masterfile_data.format_dataframe_for_masterfile(
+        df, mf, 'id_number', 1)
+    assert len(df2) == (len(df) - 2)
+
+
+def test_filters_columns(df, mf):
+    df2 = extract_masterfile_data.format_dataframe_for_masterfile(
+        df, mf, 'id_number', 1)
+    assert len(df2.columns) == (len(df.columns) - 3)
 
 
 def test_roundtrip(capsys):

@@ -55,7 +55,7 @@ def main(argv=None):
     mf = Masterfile.load_path(pargs['<masterfile_path>'])
     formatted = format_dataframe_for_masterfile(
         df, mf, pargs['--index_column'], int(pargs['--skip']))
-    formatted.to_csv(sys.stdout, line_terminator='\r\n', index=False)
+    formatted.to_csv(sys.stdout, line_terminator='\r\n')
 
 
 def format_dataframe_for_masterfile(df, mf, input_index_col, skip_rows):
@@ -72,21 +72,12 @@ def format_dataframe_for_masterfile(df, mf, input_index_col, skip_rows):
     col_rx = col_match_regex(mf, input_index_col)
     logger.debug('Column regex: {}'.format(col_rx))
     col_filtered = df.filter(regex=col_rx)
-    renamed = col_filtered.rename(columns={input_index_col: index_col})
-    ordered = _with_index_col_first(renamed, index_col)
-    logger.debug('New columns: {}'.format(ordered.columns))
-    row_filtered = _filter_rows(ordered, index_col, skip_rows)
+    row_filtered = _filter_rows(col_filtered, input_index_col, skip_rows)
     logger.debug('Now has {} rows'.format(len(row_filtered)))
-    return row_filtered
-
-
-def _with_index_col_first(df, index_col):
-    clist = list(df.columns)
-    logger.debug('Moving {} to first column'.format(index_col))
-    logger.debug(clist)
-    clist.remove(index_col)
-    clist.insert(0, index_col)
-    return df.reindex_axis(clist, axis=1)
+    renamed = row_filtered.rename(columns={input_index_col: index_col})
+    renamed.set_index(index_col, inplace=True)
+    logger.debug('New columns: {}'.format(renamed.columns))
+    return renamed
 
 
 def _filter_rows(df, index_col, skip_rows):
