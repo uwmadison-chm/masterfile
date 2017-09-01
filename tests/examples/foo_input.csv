@@ -1,4 +1,4 @@
-id_number,thing1,thing2,sr_t1_foo_var1,sr_t1_foo_var2,sr_t1_foo_sum
+id_number,thing1,thing2_stuff: foo_t1_part,sr_t1_foo_var1,sr_t1_foo_var2,sr_t1_foo_sum
 Ppt ID number,Thing 1,Thing 2,,,
 1001,3,6,3,3,6
 1002,2,5,3,3,6

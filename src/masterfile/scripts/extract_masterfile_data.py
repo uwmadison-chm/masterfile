@@ -99,7 +99,7 @@ def component_col_regex(component_count):
     """
     Match things like 'foo_bar_baz_corge'
     """
-    return '_'.join((['[^_]+'] * component_count))
+    return '_'.join((['[^_\s]+'] * component_count))
 
 
 if __name__ == '__main__':
