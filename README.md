@@ -39,6 +39,18 @@ Basically, you want Excel-for-Windows-style CSV files with no UTF-8 signature.
 * Things with blank component are ignored
 
 
+## Exclusion files
+
+* CSV format
+* Live in exclusions/
+* One row per ppt, one column per value
+* Has index column, same as data file
+* Blanks mean "Use this value," nonblanks mean "exclude this value"
+* Things in the cells may be codes; these codes may be defined in settings.json
+* If data is excluded for more than one reason, separate codes with ","
+* Not all rows / columns in masterfiles need to be included in exclusion files. Missing rows / columns are treated like blank values.
+
+
 ## Data checks
 
 Here are some (all?) of the things to do to verify you have semantically reasonable data:
