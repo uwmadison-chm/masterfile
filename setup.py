@@ -39,7 +39,8 @@ setup(
     keywords='masterfile',
     entry_points={'console_scripts': [
             'make_blank_dictionary = masterfile.scripts.make_blank_dictionary:main',
-            'extract_masterfile_data = masterfile.scripts.extract_masterfile_data:main'
+            'extract_masterfile_data = masterfile.scripts.extract_masterfile_data:main',
+            'text_to_dos = masterfile.scripts.text_to_dos:main'
         ]
     },
     classifiers=[
