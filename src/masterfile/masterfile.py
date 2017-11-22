@@ -19,6 +19,10 @@ from .vendor import attr
 from .errors import Error
 
 
+def load(path):
+    return Masterfile.load_path(path)
+
+
 @attr.s
 class Masterfile(object):
 
