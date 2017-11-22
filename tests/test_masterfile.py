@@ -60,3 +60,8 @@ def test_loading_from_path():
     mf = masterfile.Masterfile.load_path(GOOD_PATH)
     assert mf.index_column == 'ppt_id'
     assert len(mf._dataframes) == len(GOOD_CSVS)
+
+
+def test_loaded_dataframe_has_proper_index_name():
+    mf = masterfile.Masterfile.load_path(GOOD_PATH)
+    assert mf.df.index.name == mf.index_column

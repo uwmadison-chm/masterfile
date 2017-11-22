@@ -34,9 +34,18 @@ class Masterfile(object):
 
     errors = attr.ib(default=attr.Factory(list))
 
+    __joined_data = attr.ib(default=None)
+
     @property
     def dataframe(self):
-        return pd.concat(self._dataframes, axis='columns', join='outer')
+        if self.__joined_data is not None:
+            return self.__joined_data
+        self.__joined_data = pd.concat(
+            self._dataframes,
+            axis='columns',
+            join='outer')
+        self.__joined_data.index.name = self.index_column
+        return self.__joined_data
 
     @property
     def df(self):
@@ -72,6 +81,7 @@ class Masterfile(object):
         dataframes, errors = self._load_data_files(filenames)
         self._dataframes = list(chain(self._dataframes, dataframes))
         self.errors = list(chain(self.errors, errors))
+        self.__joined_data = None  # Reset the memoized data
 
     def _load_data_files(self, filenames):
         dataframes = []
