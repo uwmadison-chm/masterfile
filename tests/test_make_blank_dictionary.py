@@ -18,7 +18,7 @@ def test_raises_on_empty_params():
         make_blank_dictionary.main([])
 
 
-def prints_output_on_success(capsys):
+def test_prints_output_on_success(capsys):
     make_blank_dictionary.main([GOOD_PATH])
     out, err = capsys.readouterr()
     assert len(out) > 0
