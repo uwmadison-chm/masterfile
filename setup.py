@@ -40,6 +40,7 @@ setup(
     entry_points={'console_scripts': [
             'make_blank_dictionary = masterfile.scripts.make_blank_dictionary:main',
             'extract_masterfile_data = masterfile.scripts.extract_masterfile_data:main',
+            'make_joined_data = masterfile.scripts.make_joined_data:main',
             'text_to_dos = masterfile.scripts.text_to_dos:main'
         ]
     },
