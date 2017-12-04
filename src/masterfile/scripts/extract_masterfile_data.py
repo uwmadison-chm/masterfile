@@ -9,7 +9,7 @@
 
 """ Extract masterfile-formatted data from a CSV file.
 
-Usage: extract_masterfile_data [options] <masterfile_path> <data_file>
+Usage: extract_masterfile_data [options] <masterfile_path> <data> <output>
 
 Takes a CSV file with a mix of data destined for a masterfile and other data,
 and extracts and formats the data to masterfile format, writing the result
@@ -51,11 +51,11 @@ def main(argv=None):
     if pargs['--verbose']:
         logger.setLevel(logging.DEBUG)
     logger.debug(pargs)
-    df = pd.read_csv(pargs['<data_file>'], dtype=str)
+    df = pd.read_csv(pargs['<data>'], dtype=str)
     mf = Masterfile.load_path(pargs['<masterfile_path>'])
     formatted = format_dataframe_for_masterfile(
         df, mf, pargs['--index_column'], int(pargs['--skip']))
-    formatted.to_csv(sys.stdout, line_terminator='\r\n')
+    formatted.to_csv(pargs['<output>'], line_terminator='\r\n')
 
 
 def format_dataframe_for_masterfile(df, mf, input_index_col, skip_rows):
