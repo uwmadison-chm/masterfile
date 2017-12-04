@@ -56,7 +56,7 @@ class TestExtractMasterfileData(object):
             df, mf, 'id_number', 1)
         assert len(df2.columns) == (len(df.columns) - 3)
 
-    def test_roundtrip(self, tmpdir):
+    def test_roundtrip_file(self, tmpdir):
         outfile = str(tmpdir.join('output.csv'))
         extract_masterfile_data.main([
             '--index_column=id_number',
@@ -65,6 +65,20 @@ class TestExtractMasterfileData(object):
             INPUT_FILE,
             outfile])
         out = open(outfile).read()
+        lines = out.split('\r\n')
+        assert len(lines) == 11
+        assert lines[-1] == ''
+        columns = lines[0].split(',')
+        assert columns[0] == 'ppt_id'
+
+    def test_roundtrip_stdout(self, capsys):
+        extract_masterfile_data.main([
+            '--index_column=id_number',
+            '--skip=1',
+            GOOD_PATH,
+            INPUT_FILE,
+            '-'])
+        out, _err = capsys.readouterr()
         lines = out.split('\r\n')
         assert len(lines) == 11
         assert lines[-1] == ''
