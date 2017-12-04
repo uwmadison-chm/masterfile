@@ -34,6 +34,7 @@ from __future__ import absolute_import, unicode_literals
 import sys
 import re
 import logging
+from contextlib import contextmanager
 
 import pandas as pd
 
@@ -55,10 +56,19 @@ def main(argv=None):
     mf = Masterfile.load_path(pargs['<masterfile_path>'])
     formatted = format_dataframe_for_masterfile(
         df, mf, pargs['--index_column'], int(pargs['--skip']))
-    output = pargs['<outfile>']
-    if output == '-':
-        output = sys.stdout
-    formatted.to_csv(output, line_terminator='\r\n')
+    with file_or_stdout(pargs['<outfile>']) as output:
+        formatted.to_csv(output, line_terminator='\r\n')
+
+
+@contextmanager
+def file_or_stdout(filename):
+    if filename == '-':
+        logger.info('Writing to stdout')
+        yield sys.stdout
+    else:
+        with open(filename, 'w') as f:
+            logger.info('Writing to {}'.format(filename))
+            yield f
 
 
 def format_dataframe_for_masterfile(df, mf, input_index_col, skip_rows):
