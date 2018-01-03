@@ -21,6 +21,7 @@ def index_to_column_id(number):
     0 => A
     25 => Z
     26 => AA
+    703 => AAB
     """
     if number < 0 or not isinstance(number, int):
         raise AttributeError("index_to_column_id requires a non-negative int")
