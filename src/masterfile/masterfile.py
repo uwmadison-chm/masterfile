@@ -8,7 +8,6 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from itertools import chain
 from os import path
 import json
 from glob import glob
@@ -33,6 +32,8 @@ class Masterfile(object):
     _pathname = attr.ib(default=None)
 
     _dataframes = attr.ib(default=attr.Factory(list))
+
+    _dataframes_orig = attr.ib(default=attr.Factory(list))
 
     _dataframe_files = attr.ib(default=attr.Factory(list))
 
@@ -85,8 +86,8 @@ class Masterfile(object):
 
     def _add_data_files_to_dataframes(self):
         dataframes, errors = self._load_data_files(self._dataframe_files)
-        self._dataframes = list(chain(self._dataframes, dataframes))
-        self.errors = list(chain(self.errors, errors))
+        self._dataframes = dataframes
+        self.errors = errors
         self.__joined_data = None  # Reset the memoized data
 
     def _load_data_files(self, filenames):
@@ -96,7 +97,7 @@ class Masterfile(object):
             try:
                 df = self._load_data_csv(f)
                 dataframes.append(df)
-            except LookupError as e:
+            except LookupError:
                 errors.append(Error(
                     code='E101',
                     location=f,
