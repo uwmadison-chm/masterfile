@@ -25,16 +25,9 @@ def index_to_column_id(number):
     if number < 0 or not isinstance(number, int):
         raise AttributeError("index_to_column_id requires a non-negative int")
     digits = string.ascii_uppercase
-    if number == 0:
-        return digits[0]
-    return __rec_int_to_colid(number, digits)
-
-
-def __rec_int_to_colid(number, digits):
-    base = len(digits)
-    if number < 0:
-        return ''
-
-    return (
-        __rec_int_to_colid((number // base) - 1, digits) +
-        digits[number % base])
+    parts = []
+    number += 1  # The algorithm works on 1-based input
+    while number > 0:
+        number, mod = divmod(number - 1, len(digits))
+        parts.insert(0, digits[mod])
+    return ''.join(parts)
