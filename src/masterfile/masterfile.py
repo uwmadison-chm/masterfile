@@ -34,6 +34,8 @@ class Masterfile(object):
 
     _dataframes = attr.ib(default=attr.Factory(list))
 
+    _dataframe_files = attr.ib(default=attr.Factory(list))
+
     _dictionaries = attr.ib(default=attr.Factory(list))
 
     errors = attr.ib(default=attr.Factory(list))
@@ -78,11 +80,11 @@ class Masterfile(object):
         return json.load(open(json_filename, 'r'))
 
     def _load_all_data_files_into_dataframes(self):
-        files = glob(path.join(self._pathname, "*csv"))
-        self._add_data_files_to_dataframes(files)
+        self._dataframe_files = glob(path.join(self._pathname, "*csv"))
+        self._add_data_files_to_dataframes()
 
-    def _add_data_files_to_dataframes(self, filenames):
-        dataframes, errors = self._load_data_files(filenames)
+    def _add_data_files_to_dataframes(self):
+        dataframes, errors = self._load_data_files(self._dataframe_files)
         self._dataframes = list(chain(self._dataframes, dataframes))
         self.errors = list(chain(self.errors, errors))
         self.__joined_data = None  # Reset the memoized data
