@@ -28,8 +28,6 @@ class Masterfile(object):
 
     index_column = attr.ib()
 
-    components = attr.ib()
-
     _pathname = attr.ib(default=None)
 
     _dataframes = attr.ib(default=attr.Factory(list))
