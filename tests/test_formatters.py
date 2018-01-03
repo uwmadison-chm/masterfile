@@ -18,6 +18,7 @@ class TestFormatters(object):
         assert index_to_column_id(0) == 'A'
         assert index_to_column_id(25) == 'Z'
         assert index_to_column_id(26) == 'AA'
+        assert index_to_column_id(27) == 'AB'
 
     def test_index_to_column_id_bad_inputs(self):
         with pytest.raises(AttributeError):
