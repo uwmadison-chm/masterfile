@@ -21,9 +21,13 @@ class Error(object):
 
     message = attr.ib()
 
+    root_exception = attr.ib(default=None)
+
 
 ERROR_CODES = {
     'E1': 'Columns',
     'E101': 'index column not found',
-    'E102': 'duplicate column name'
+    'E102': 'duplicate column name',
+    'E9': 'I/O',
+    'E901': 'Cannot read file',
 }
