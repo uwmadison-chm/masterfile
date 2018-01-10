@@ -19,49 +19,54 @@ GOOD_PATH = path.join(EXAMPLE_PATH, 'good')
 GOOD_CSVS = glob(path.join(GOOD_PATH, '*csv'))
 
 
-def test_load_csv_no_error():
-    mf = masterfile.Masterfile(index_column='ppt_id', components=[])
-    df = mf._load_data_csv(GOOD_CSVS[0])
-    assert df.index.name == 'ppt_id'
+class TestMasterfile(object):
 
+    def test_masterfile_loads_unprocessed_files(self):
+        mf = masterfile.Masterfile(index_column='ppt_id', components=[])
+        mf._candidate_data_files = GOOD_CSVS
+        mf._read_unprocessed_data_files()
+        assert not mf.errors
+        assert len(mf._unprocessed_dataframes) == len(GOOD_CSVS)
 
-def test_load_csv_raises_error_when_missing_index_col():
-    mf = masterfile.Masterfile(index_column='missing', components=[])
-    with pytest.raises(LookupError):
-        mf._load_data_csv(GOOD_CSVS[0])
+    def test_read_unprocessed_errors_on_missing_files(self):
+        mf = masterfile.Masterfile(index_column='ppt_id', components=[])
+        mf._candidate_data_files = ['bogus.csv']
+        mf._read_unprocessed_data_files()
+        assert len(mf.errors) == 1
 
+    def test_process_dataframes_sets_index(self):
+        mf = masterfile.Masterfile(index_column='ppt_id', components=[])
+        mf._candidate_data_files = GOOD_CSVS
+        mf._read_unprocessed_data_files()
+        mf._process_dataframes()
+        assert not mf.errors
+        assert len(mf._dataframes) == len(GOOD_CSVS)
+        for df in mf._dataframes:
+            assert df.index.name == mf.index_column
 
-def test_load_multi_works():
-    mf = masterfile.Masterfile(index_column='ppt_id', components=[])
-    dataframes, errors = mf._load_data_files(GOOD_CSVS)
-    assert len(dataframes) == len(GOOD_CSVS)
-    assert len(errors) == 0
+    def test_process_dataframes_errors_on_missing_column(self):
+        mf = masterfile.Masterfile(index_column='missing', components=[])
+        mf._candidate_data_files = GOOD_CSVS
+        mf._read_unprocessed_data_files()
+        mf._process_dataframes()
+        assert len(mf.errors) == len(GOOD_CSVS)
+        assert len(mf._dataframes) == 0
+        assert len(mf._unprocessed_dataframes) == len(GOOD_CSVS)
 
+    def test_loading_settings_file_works(self):
+        json_data = masterfile.Masterfile._read_settings_json(GOOD_PATH)
+        assert json_data['index_column'] == 'ppt_id'
+        assert len(json_data['components']) == 4
 
-def test_load_multi_generates_errors():
-    mf = masterfile.Masterfile(index_column='missing', components=[])
-    dataframes, errors = mf._load_data_files(GOOD_CSVS)
-    assert len(dataframes) == 0
-    assert len(errors) == len(GOOD_CSVS)
+    def test_loading_fails_for_bad_path(self):
+        with pytest.raises(IOError):
+            masterfile.Masterfile._read_settings_json(EXAMPLE_PATH)
 
+    def test_loading_from_path(self):
+        mf = masterfile.Masterfile.load_path(GOOD_PATH)
+        assert mf.index_column == 'ppt_id'
+        assert len(mf._dataframes) == len(GOOD_CSVS)
 
-def test_loading_settings_file_works():
-    json_data = masterfile.Masterfile._read_settings_json(GOOD_PATH)
-    assert json_data['index_column'] == 'ppt_id'
-    assert len(json_data['components']) == 4
-
-
-def test_loading_fails_for_bad_path():
-    with pytest.raises(IOError):
-        masterfile.Masterfile._read_settings_json(EXAMPLE_PATH)
-
-
-def test_loading_from_path():
-    mf = masterfile.Masterfile.load_path(GOOD_PATH)
-    assert mf.index_column == 'ppt_id'
-    assert len(mf._dataframes) == len(GOOD_CSVS)
-
-
-def test_loaded_dataframe_has_proper_index_name():
-    mf = masterfile.Masterfile.load_path(GOOD_PATH)
-    assert mf.df.index.name == mf.index_column
+    def test_loaded_dataframe_has_proper_index_name(self):
+        mf = masterfile.Masterfile.load_path(GOOD_PATH)
+        assert mf.df.index.name == mf.index_column

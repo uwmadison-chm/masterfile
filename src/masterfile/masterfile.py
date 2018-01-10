@@ -15,7 +15,7 @@ from glob import glob
 import pandas as pd
 
 from .vendor import attr
-from .errors import Error
+from . import errors
 
 
 def load(path):
@@ -25,22 +25,46 @@ def load(path):
 @attr.s
 class Masterfile(object):
 
+    # The name of the column with participant identifiers.
+    # Generally read from settings.json
     index_column = attr.ib()
 
+    # The set of components of column names - for example, things such as
+    # modality, timepoint, and measure name.
+    # Generally read from settings.json
     components = attr.ib()
 
-    _pathname = attr.ib(default=None)
+    # The path of the masterfile. Must contain a settings.json file.
+    root_path = attr.ib(default=None)
 
+    # A list of errors that occurred while trying to read the data. Note that
+    # this is not a full-scale validation of the masterfile data, just the
+    # things we can't avoid finding while loading the data.
+    errors = attr.ib(default=attr.Factory(list))
+
+    # _dataframes and _loaded_data_files will be the same length.
+    # The items in _dataframes will have index set to index_column and may
+    # have their column types detected.
     _dataframes = attr.ib(default=attr.Factory(list))
 
-    _dataframes_orig = attr.ib(default=attr.Factory(list))
+    # All files that were successfully loaded.
+    _loaded_data_files = attr.ib(default=attr.Factory(list))
 
-    _dataframe_files = attr.ib(default=attr.Factory(list))
+    # _unprocessed_dataframes and _candidate_data_files will be the same
+    # length.
+    # If a candidate file can't be loaded at all, the unprocessed dataframe
+    # for the file will be None.
+    # dtype for unprocessed dataframes is always str, to avoid dataloss.
+    _unprocessed_dataframes = attr.ib(default=attr.Factory(list))
+
+    # All filenames we're going to try to load.
+    _candidate_data_files = attr.ib(default=attr.Factory(list))
 
     _dictionaries = attr.ib(default=attr.Factory(list))
 
-    errors = attr.ib(default=attr.Factory(list))
-
+    # Everything in _dataframes, joined by pandas.concat. This is the
+    # cached copy.
+    # Accessed by the "dataframe" or "df" properties.
     __joined_data = attr.ib(default=None)
 
     @property
@@ -59,57 +83,77 @@ class Masterfile(object):
         return self.dataframe
 
     @classmethod
-    def load_path(klass, pathname):
+    def load_path(klass, root_path):
         """
-        Initialize a Masterfile from pathname/settings.json, load all .csv
+        Initialize a Masterfile from root_path/settings.json, load all .csv
         data and dictionaries into it.
-        TODO: Implement this.
         """
-        json_data = klass._read_settings_json(pathname)
+        json_data = klass._read_settings_json(root_path)
         mf = klass(**json_data)
-        mf._pathname = pathname
-        mf._load_all_data_files_into_dataframes()
+        mf._find_and_load_files()
         return mf
 
     @classmethod
-    def _read_settings_json(klass, pathname):
+    def _settings_filename(klass, root_path):
+        return path.join(str(root_path), "settings.json")
+
+    @classmethod
+    def _read_settings_json(klass, root_path):
         """
-        load pathname/settings.json, parse it, and return a dict with its
+        load root_path/settings.json, parse it, and return a dict with its
         contents.
         """
-        json_filename = path.join(pathname, "settings.json")
-        return json.load(open(json_filename, 'r'))
+        json_filename = klass._settings_filename(root_path)
+        data = json.load(open(json_filename, 'r'))
+        data['root_path'] = root_path
+        return data
 
-    def _load_all_data_files_into_dataframes(self):
-        self._dataframe_files = glob(path.join(self._pathname, "*csv"))
-        self._add_data_files_to_dataframes()
+    def _find_and_load_files(self):
+        self.errors = []
+        self._find_candidate_data_files()
+        self._read_unprocessed_data_files()
+        self._process_dataframes()
 
-    def _add_data_files_to_dataframes(self):
-        dataframes, errors = self._load_data_files(self._dataframe_files)
-        self._dataframes = dataframes
-        self.errors = errors
-        self.__joined_data = None  # Reset the memoized data
+    def _find_candidate_data_files(self):
+        root = str(self.root_path)
+        self._candidate_data_files = glob(path.join(root, "*csv"))
 
-    def _load_data_files(self, filenames):
-        dataframes = []
-        errors = []
-        for f in filenames:
+    def _read_unprocessed_data_files(self):
+        self._unprocessed_dataframes = []
+        for f in self._candidate_data_files:
+            df = None
             try:
-                df = self._load_data_csv(f)
-                dataframes.append(df)
-            except LookupError:
-                errors.append(Error(
-                    code='E101',
+                df = pd.read_csv(f, dtype=str)
+            except IOError as e:
+                self.errors.append(errors.FileReadError(
                     location=f,
-                    message='column {} not found'.format(self.index_column)))
-        return (dataframes, errors)
+                    message="Can't read {}".format(f),
+                    root_exception=e
+                ))
+            self._unprocessed_dataframes.append(df)
 
-    def _load_data_csv(self, filename):
+    def _process_dataframes(self):
+        self._dataframes = []
+        self._loaded_data_files = []
+        self.__joined_data = None
+        for f, udf in zip(
+                self._candidate_data_files, self._unprocessed_dataframes):
+            try:
+                df = udf.set_index(self.index_column)
+                self._dataframes.append(df)
+            except LookupError as e:
+                self.errors.append(errors.IndexNotFoundError(
+                    location=f,
+                    message="Can't set index column to {}".format(
+                        self.index_column),
+                    root_exception=e
+                ))
+
+    def _read_data_csv(self, filename):
         df = pd.read_csv(
             filename,
             index_col=False,
             dtype={self.index_column: str})
-        df.set_index(self.index_column, inplace=True)
         return df
 
     def _load_dictionary_csv(self, filename):
