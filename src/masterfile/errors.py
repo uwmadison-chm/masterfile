@@ -15,19 +15,30 @@ from .vendor import attr
 @attr.s
 class Error(object):
 
-    code = attr.ib()
-
     location = attr.ib()
 
     message = attr.ib()
 
     root_exception = attr.ib(default=None)
 
+    code = None
 
-ERROR_CODES = {
-    'E1': 'Columns',
-    'E101': 'index column not found',
-    'E102': 'duplicate column name',
-    'E9': 'I/O',
-    'E901': 'Cannot read file',
-}
+
+class ColumnError(Error):
+    code = 'E1'
+
+
+class IndexNotFoundError(ColumnError):
+    code = 'E101'
+
+
+class DuplicateColumnError(ColumnError):
+    code = 'E102'
+
+
+class IOError(Error):
+    code = 'E9'
+
+
+class FileReadError(IOError):
+    code = 'E901'
