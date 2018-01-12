@@ -54,13 +54,13 @@ class TestMasterfile(object):
         assert len(mf._unprocessed_dataframes) == len(GOOD_CSVS)
 
     def test_loading_settings_file_works(self):
-        json_data = masterfile.Masterfile._read_settings_json(GOOD_PATH)
-        assert json_data['index_column'] == 'ppt_id'
-        assert len(json_data['components']) == 4
+        mf = masterfile.Masterfile.load_path(GOOD_PATH)
+        assert mf.index_column == 'ppt_id'
+        assert len(mf.components) == 4
 
     def test_loading_fails_for_bad_path(self):
-        with pytest.raises(IOError):
-            masterfile.Masterfile._read_settings_json(EXAMPLE_PATH)
+        mf = masterfile.Masterfile.load_path(EXAMPLE_PATH)
+        assert len(mf.errors) == 1
 
     def test_loading_from_path(self):
         mf = masterfile.Masterfile.load_path(GOOD_PATH)

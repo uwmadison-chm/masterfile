@@ -90,26 +90,26 @@ class Masterfile(object):
         """
         json_data = None
         settings_file = klass._settings_filename(root_path)
-        # try:
-        json_data = klass._read_settings_json(settings_file)
-        mf = klass(**json_data)
-        mf._find_and_load_files()
-        return mf
+        try:
+            json_data = klass._read_settings_json(settings_file)
+            mf = klass(**json_data)
+            mf._find_and_load_files()
+            return mf
 
-        # except IOError as e:
-        #     mf = klass()
-        #     mf.errors.append(errors.FileReadError(
-        #         location=settings_file,
-        #         message="Can't read settings file",
-        #         root_exception=e))
-        #     return mf
-        # except ValueError as e:
-        #     mf = klass()
-        #     mf.errors.append(errors.JSONError(
-        #         location=settings_file,
-        #         message="JSON reading error",
-        #         root_exception=e))
-        #     return mf
+        except IOError as e:
+            mf = klass()
+            mf.errors.append(errors.FileReadError(
+                location=settings_file,
+                message="Can't read settings file",
+                root_exception=e))
+            return mf
+        except ValueError as e:
+            mf = klass()
+            mf.errors.append(errors.JSONError(
+                location=settings_file,
+                message="JSON reading error",
+                root_exception=e))
+            return mf
 
     @classmethod
     def _settings_filename(klass, root_path):
@@ -122,7 +122,7 @@ class Masterfile(object):
         contents.
         """
         data = json.load(open(filename, 'r'))
-        data['root_path'] = path.basename(filename)
+        data['root_path'] = path.dirname(filename)
         return data
 
     def _find_and_load_files(self):
