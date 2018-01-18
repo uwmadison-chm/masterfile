@@ -36,4 +36,4 @@ VALIDATOR_CHAIN = [
 
 
 def run_all_validators(masterfile):
-    return chain(*[m.validate(masterfile) for m in VALIDATOR_CHAIN])
+    return list(chain(*[m.validate(masterfile) for m in VALIDATOR_CHAIN]))
