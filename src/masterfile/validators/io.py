@@ -16,7 +16,7 @@ logger.setLevel(logging.INFO)
 
 
 def validate(masterfile):
-    logger.debug("io_validator:validate()")
+    logger.debug("validators.io:validate()")
     errlist = [e for e in masterfile.errors if isinstance(e, errors.IOError)]
     logger.debug("found {} errors".format(len(errlist)))
     return errlist

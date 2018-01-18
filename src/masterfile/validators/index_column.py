@@ -18,7 +18,7 @@ logger.setLevel(logging.INFO)
 
 
 def validate(mf):
-    logger.debug('index_column_validator:validate()')
+    logger.debug('validators.index_column:validate()')
     errlist = [
         e for e in mf.errors if isinstance(e, errors.IndexNotFoundError)]
     logger.debug("found {} errors".format(len(errlist)))
