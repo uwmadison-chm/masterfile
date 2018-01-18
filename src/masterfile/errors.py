@@ -36,6 +36,14 @@ class DuplicateColumnError(ColumnError):
     code = 'E102'
 
 
+class SettingsError(Error):
+    code = 'E8'
+
+
+class JSONError(SettingsError):
+    code = 'E801'
+
+
 class IOError(Error):
     code = 'E9'
 

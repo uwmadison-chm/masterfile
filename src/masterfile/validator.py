@@ -25,11 +25,15 @@ people where the data are from.
 
 from __future__ import absolute_import, unicode_literals
 
+from itertools import chain
 
-from .vendor import attr
-from .errors import Error
+from masterfile import validators
 
 
-@attr.s
-class Validator(object):
-    pass
+VALIDATOR_CHAIN = [
+    validators.io_validator,
+]
+
+
+def run_all_validators(masterfile):
+    return list(chain(*[m.validate(masterfile) for m in VALIDATOR_CHAIN]))

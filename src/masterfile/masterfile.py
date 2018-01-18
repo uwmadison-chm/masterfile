@@ -27,12 +27,12 @@ class Masterfile(object):
 
     # The name of the column with participant identifiers.
     # Generally read from settings.json
-    index_column = attr.ib()
+    index_column = attr.ib(default=None)
 
     # The set of components of column names - for example, things such as
     # modality, timepoint, and measure name.
     # Generally read from settings.json
-    components = attr.ib()
+    components = attr.ib(default=None)
 
     # The path of the masterfile. Must contain a settings.json file.
     root_path = attr.ib(default=None)
@@ -88,24 +88,41 @@ class Masterfile(object):
         Initialize a Masterfile from root_path/settings.json, load all .csv
         data and dictionaries into it.
         """
-        json_data = klass._read_settings_json(root_path)
-        mf = klass(**json_data)
-        mf._find_and_load_files()
-        return mf
+        json_data = None
+        settings_file = klass._settings_filename(root_path)
+        try:
+            json_data = klass._read_settings_json(settings_file)
+            mf = klass(**json_data)
+            mf._find_and_load_files()
+            return mf
+
+        except IOError as e:
+            mf = klass()
+            mf.errors.append(errors.FileReadError(
+                location=settings_file,
+                message="Can't read settings file",
+                root_exception=e))
+            return mf
+        except ValueError as e:
+            mf = klass()
+            mf.errors.append(errors.JSONError(
+                location=settings_file,
+                message="JSON reading error",
+                root_exception=e))
+            return mf
 
     @classmethod
     def _settings_filename(klass, root_path):
         return path.join(str(root_path), "settings.json")
 
     @classmethod
-    def _read_settings_json(klass, root_path):
+    def _read_settings_json(klass, filename):
         """
         load root_path/settings.json, parse it, and return a dict with its
         contents.
         """
-        json_filename = klass._settings_filename(root_path)
-        data = json.load(open(json_filename, 'r'))
-        data['root_path'] = root_path
+        data = json.load(open(filename, 'r'))
+        data['root_path'] = path.dirname(filename)
         return data
 
     def _find_and_load_files(self):
