@@ -6,11 +6,9 @@
 # at the University of Wisconsin-Madison.
 # Released under MIT licence; see LICENSE at the package root.
 
-
 import logging
 
 from masterfile import errors
-
 
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 logger = logging.getLogger()
