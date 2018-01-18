@@ -32,6 +32,7 @@ from masterfile import validators
 
 VALIDATOR_CHAIN = [
     validators.io_validator,
+    validators.index_column_validator,
 ]
 
 
