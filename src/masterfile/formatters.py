@@ -22,12 +22,17 @@ def index_to_column_id(number):
     25 => Z
     26 => AA
     703 => AAB
+    Note that this is similar to converting numbers to base-26, but not quite
+    the same — this numbering scheme has no concept of 0. We go from
+    "Z" to "AA" which is like going from 9 to 11 with no intervening 10.
+    Only works for positive integers.
     """
     if number < 0 or not isinstance(number, int):
         raise AttributeError("index_to_column_id requires a non-negative int")
     digits = string.ascii_uppercase
     parts = []
-    number += 1  # The algorithm works on 1-based input
+    # The algorithm works on 1-based input, the function takes 0-based input
+    number += 1
     while number > 0:
         number, mod = divmod(number - 1, len(digits))
         parts.insert(0, digits[mod])
