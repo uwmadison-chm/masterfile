@@ -17,6 +17,7 @@ from masterfile import masterfile
 EXAMPLE_PATH = path.join(path.dirname(path.abspath(__file__)), 'examples')
 GOOD_PATH = path.join(EXAMPLE_PATH, 'good')
 GOOD_CSVS = glob(path.join(GOOD_PATH, '*csv'))
+PROBLEMS_PATH = path.join(EXAMPLE_PATH, 'problems')
 
 
 class TestMasterfile(object):
