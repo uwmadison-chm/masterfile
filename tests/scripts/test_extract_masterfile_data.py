@@ -11,12 +11,11 @@ import pytest
 import pandas as pd
 from os import path
 
-from .test_masterfile import EXAMPLE_PATH, GOOD_PATH
+from ..test_masterfile import EXAMPLE_PATH, GOOD_PATH
 from masterfile.scripts import extract_masterfile_data
 from masterfile.masterfile import Masterfile
 
 INPUT_FILE = path.join(EXAMPLE_PATH, 'foo_input.csv')
-
 
 
 class TestExtractMasterfileData(object):
