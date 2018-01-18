@@ -16,7 +16,7 @@ from masterfile import errors
 from masterfile.validators import index_column
 
 
-class TestIndexColumnValidator(object):
+class TestIndexColumn(object):
 
     def test_returns_no_error_for_good_mf(self):
         mf = masterfile.load(GOOD_PATH)

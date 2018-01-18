@@ -16,7 +16,7 @@ from masterfile import errors
 from masterfile.validators import io
 
 
-class TestIOValidator(object):
+class TestIO(object):
 
     def test_returns_no_errors_with_good_dir(self):
         mf = masterfile.load(GOOD_PATH)
