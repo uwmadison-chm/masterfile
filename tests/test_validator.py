@@ -9,11 +9,8 @@
 
 from __future__ import absolute_import
 
-import masterfile
 from masterfile import validator
 from masterfile import errors
-
-from .test_masterfile import EXAMPLE_PATH, GOOD_PATH, PROBLEMS_PATH
 
 
 def instance_filter(iterable, klass):
@@ -22,17 +19,14 @@ def instance_filter(iterable, klass):
 
 class TestValidator(object):
 
-    def test_good_path_has_no_errors(self):
-        mf = masterfile.load(GOOD_PATH)
-        ers = validator.run_all_validators(mf)
+    def test_good_path_has_no_errors(self, good_mf):
+        ers = validator.run_all_validators(good_mf)
         assert len(ers) == 0
 
-    def test_example_path_has_ioerror(self):
-        mf = masterfile.load(EXAMPLE_PATH)
-        ers = validator.run_all_validators(mf)
+    def test_example_path_has_ioerror(self, nosettings_mf):
+        ers = validator.run_all_validators(nosettings_mf)
         assert instance_filter(ers, errors.IOError)
 
-    def test_problems_path_has_index_error(self):
-        mf = masterfile.load(PROBLEMS_PATH)
-        ers = validator.run_all_validators(mf)
+    def test_problems_path_has_index_error(self, problems_mf):
+        ers = validator.run_all_validators(problems_mf)
         assert instance_filter(ers, errors.IndexNotFoundError)

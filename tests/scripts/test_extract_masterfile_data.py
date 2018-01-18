@@ -11,11 +11,12 @@ import pytest
 import pandas as pd
 from os import path
 
-from ..test_masterfile import EXAMPLE_PATH, GOOD_PATH
 from masterfile.scripts import extract_masterfile_data
 from masterfile.masterfile import Masterfile
 
-INPUT_FILE = path.join(EXAMPLE_PATH, 'foo_input.csv')
+from .. import conftest
+
+INPUT_FILE = path.join(conftest.example_path(), 'foo_input.csv')
 
 
 class TestExtractMasterfileData(object):
@@ -40,27 +41,27 @@ class TestExtractMasterfileData(object):
         df2 = extract_masterfile_data._filter_rows(df, 'id_number', 1)
         assert len(df2) == (len(df) - 2)
 
-    def test_sets_index_column(self, df, mf):
+    def test_sets_index_column(self, df, good_mf):
         df2 = extract_masterfile_data.format_dataframe_for_masterfile(
-            df, mf, 'id_number', 1)
-        assert df2.index.name == mf.index_column
+            df, good_mf, 'id_number', 1)
+        assert df2.index.name == good_mf.index_column
 
-    def test_filters_rows(self, df, mf):
+    def test_filters_rows(self, df, good_mf):
         df2 = extract_masterfile_data.format_dataframe_for_masterfile(
-            df, mf, 'id_number', 1)
+            df, good_mf, 'id_number', 1)
         assert len(df2) == (len(df) - 2)
 
-    def test_filters_columns(self, df, mf):
+    def test_filters_columns(self, df, good_mf):
         df2 = extract_masterfile_data.format_dataframe_for_masterfile(
-            df, mf, 'id_number', 1)
+            df, good_mf, 'id_number', 1)
         assert len(df2.columns) == (len(df.columns) - 3)
 
-    def test_roundtrip_file(self, tmpdir):
+    def test_roundtrip_file(self, good_path, tmpdir):
         outfile = str(tmpdir.join('output.csv'))
         extract_masterfile_data.main([
             '--index_column=id_number',
             '--skip=1',
-            GOOD_PATH,
+            good_path,
             INPUT_FILE,
             outfile])
         out = open(outfile).read()
@@ -70,11 +71,11 @@ class TestExtractMasterfileData(object):
         columns = lines[0].split(',')
         assert columns[0] == 'ppt_id'
 
-    def test_roundtrip_stdout(self, capsys):
+    def test_roundtrip_stdout(self, good_path, capsys):
         extract_masterfile_data.main([
             '--index_column=id_number',
             '--skip=1',
-            GOOD_PATH,
+            good_path,
             INPUT_FILE,
             '-'])
         out, _err = capsys.readouterr()

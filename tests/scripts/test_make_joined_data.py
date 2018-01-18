@@ -11,7 +11,6 @@ import pytest
 
 from os import path
 
-from ..test_masterfile import GOOD_PATH
 from masterfile.scripts import make_joined_data
 
 
@@ -21,13 +20,13 @@ class TestMakeJoinedData(object):
         with pytest.raises(SystemExit):
             make_joined_data.main([])
 
-    def test_prints_output_on_success_file(self, tmpdir):
+    def test_prints_output_on_success_file(self, good_path, tmpdir):
         outfile = tmpdir.join('joined.csv')
-        make_joined_data.make_joined_data(GOOD_PATH, outfile)
+        make_joined_data.make_joined_data(good_path, outfile)
         assert path.exists(str(outfile))
         assert path.getsize(str(outfile)) > 0
 
-    def test_prints_output_on_success_stdout(self, capsys):
-        make_joined_data.main([GOOD_PATH, '-'])
+    def test_prints_output_on_success_stdout(self, good_path, capsys):
+        make_joined_data.main([good_path, '-'])
         out, _err = capsys.readouterr()
         assert len(out) > 0

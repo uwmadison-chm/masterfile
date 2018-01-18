@@ -11,7 +11,6 @@ from os import path
 
 import pytest
 
-from ..test_masterfile import GOOD_PATH
 from masterfile.scripts import make_blank_dictionary
 
 
@@ -21,13 +20,13 @@ class TestMakeBlankDictionary(object):
         with pytest.raises(SystemExit):
             make_blank_dictionary.main([])
 
-    def test_prints_output_on_success_stdout(self, capsys):
-        make_blank_dictionary.main([GOOD_PATH, '-'])
+    def test_prints_output_on_success_stdout(self, good_path, capsys):
+        make_blank_dictionary.main([good_path, '-'])
         out, err = capsys.readouterr()
         assert len(out) > 0
 
-    def test_prints_output_on_success_outfile(self, tmpdir):
+    def test_prints_output_on_success_outfile(self, good_path, tmpdir):
         outfile = str(tmpdir.join('dict.csv'))
-        make_blank_dictionary.main([GOOD_PATH, outfile])
+        make_blank_dictionary.main([good_path, outfile])
         assert path.exists(str(outfile))
         assert path.getsize(str(outfile)) > 0
