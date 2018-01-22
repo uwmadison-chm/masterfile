@@ -16,7 +16,7 @@ import string
 
 def index_to_column_id(number):
     """
-    Takes a zero-based index and converts it to a column identifier string
+    Takes a one-based index and converts it to a column identifier string
     such as used in Excel. Examples:
     0 => A
     25 => Z
@@ -27,12 +27,10 @@ def index_to_column_id(number):
     "Z" to "AA" which is like going from 9 to 11 with no intervening 10.
     Only works for positive integers.
     """
-    if number < 0 or not isinstance(number, int):
+    if number <= 0 or not isinstance(number, int):
         raise AttributeError("index_to_column_id requires a non-negative int")
     digits = string.ascii_uppercase
     parts = []
-    # The algorithm works on 1-based input, the function takes 0-based input
-    number += 1
     while number > 0:
         number, mod = divmod(number - 1, len(digits))
         parts.insert(0, digits[mod])

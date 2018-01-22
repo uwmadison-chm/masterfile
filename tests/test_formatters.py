@@ -15,13 +15,13 @@ import pytest
 class TestFormatters(object):
 
     def test_index_to_column_id_normal_inputs(self):
-        assert index_to_column_id(0) == 'A'
-        assert index_to_column_id(25) == 'Z'
-        assert index_to_column_id(26) == 'AA'
-        assert index_to_column_id(27) == 'AB'
-        assert index_to_column_id(701) == 'ZZ'
-        assert index_to_column_id(702) == 'AAA'
-        assert index_to_column_id(703) == 'AAB'
+        assert index_to_column_id(1) == 'A'
+        assert index_to_column_id(26) == 'Z'
+        assert index_to_column_id(27) == 'AA'
+        assert index_to_column_id(28) == 'AB'
+        assert index_to_column_id(702) == 'ZZ'
+        assert index_to_column_id(703) == 'AAA'
+        assert index_to_column_id(704) == 'AAB'
 
     def test_index_to_column_id_bad_inputs(self):
         with pytest.raises(AttributeError):
@@ -30,3 +30,5 @@ class TestFormatters(object):
             index_to_column_id(1.1)
         with pytest.raises(AttributeError):
             index_to_column_id(-1)
+        with pytest.raises(AttributeError):
+            index_to_column_id(0)
