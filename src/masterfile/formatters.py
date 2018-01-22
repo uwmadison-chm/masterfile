@@ -11,6 +11,8 @@ This package contains functions for pretty-printing data — for example,
 converting column numbers into Excel-like column identifier strings.
 """
 
+from __future__ import absolute_import
+
 import string
 
 
