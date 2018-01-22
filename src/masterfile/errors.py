@@ -76,12 +76,12 @@ class Location(object):
         return self.filename
 
     def _format_line_number(self):
-        if not self.line_number:
+        if self.line_number is None:
             return ''
         return ' line {}'.format(self.line_number)
 
     def _format_column_number(self, col_as_letters):
-        if not self.column_number:
+        if self.column_number is None:
             return ''
         if col_as_letters:
             return ' column {}'.format(
