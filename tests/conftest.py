@@ -20,36 +20,36 @@ import masterfile
 # PROBLEMS_PATH = path.join(EXAMPLE_PATH, 'problems')
 
 
-@pytest.fixture
+@pytest.fixture()
 def example_path():
     return path.join(path.dirname(path.abspath(__file__)), 'examples')
 
 
-@pytest.fixture
+@pytest.fixture()
 def good_path():
     return path.join(example_path(), 'good')
 
 
-@pytest.fixture
+@pytest.fixture()
 def good_csvs():
     return glob(path.join(good_path(), '*csv'))
 
 
-@pytest.fixture
+@pytest.fixture()
 def problems_path():
     return path.join(example_path(), 'problems')
 
 
-@pytest.fixture
+@pytest.fixture()
 def good_mf():
     return masterfile.load(good_path())
 
 
-@pytest.fixture
+@pytest.fixture()
 def nosettings_mf():
     return masterfile.load(example_path())
 
 
-@pytest.fixture
+@pytest.fixture()
 def problems_mf():
     return masterfile.load(problems_path())
