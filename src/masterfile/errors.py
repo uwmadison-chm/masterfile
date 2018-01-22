@@ -66,11 +66,14 @@ class Location(object):
     # Optional. One-based (to be consistent with line_number)
     column_number = attr.ib(default=None)
 
+    comment = attr.ib(default=None)
+
     def format(self, col_as_letters=True):
-        return '{}:{}{}'.format(
+        return '{}{}{}{}'.format(
             self._format_filename(),
             self._format_line_number(),
-            self._format_column_number(col_as_letters))
+            self._format_column_number(col_as_letters),
+            self._format_comment())
 
     def _format_filename(self):
         return self.filename
@@ -87,3 +90,8 @@ class Location(object):
             return ' column {}'.format(
                 formatters.column_number_to_column_id(self.column_number))
         return ' column {}'.format(self.column_number)
+
+    def _format_comment(self):
+        if self.comment is None:
+            return ''
+        return ' ({})'.format(self.comment)
