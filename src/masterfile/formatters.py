@@ -14,7 +14,7 @@ converting column numbers into Excel-like column identifier strings.
 import string
 
 
-def index_to_column_id(number):
+def column_number_to_column_id(number):
     """
     Takes a one-based index and converts it to a column identifier string
     such as used in Excel. Examples:
@@ -28,7 +28,8 @@ def index_to_column_id(number):
     Only works for positive integers.
     """
     if number <= 0 or not isinstance(number, int):
-        raise AttributeError("index_to_column_id requires a non-negative int")
+        raise AttributeError(
+            "column_number_to_column_id requires a non-negative int")
     digits = string.ascii_uppercase
     parts = []
     while number > 0:
