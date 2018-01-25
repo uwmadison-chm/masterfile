@@ -30,3 +30,7 @@ class TestValidator(object):
     def test_problems_path_has_index_error(self, problems_mf):
         ers = validator.run_all_validators(problems_mf)
         assert instance_filter(ers, errors.IndexNotFoundError)
+
+    def test_problems_path_has_duplicate_error(self, problems_mf):
+        ers = validator.run_all_validators(problems_mf)
+        assert instance_filter(ers, errors.DuplicateColumnError)

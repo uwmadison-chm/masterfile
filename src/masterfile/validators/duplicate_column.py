@@ -22,8 +22,14 @@ logger.setLevel(logging.INFO)
 def validate(mf):
     logger.debug('validators.duplicate_column:validate()')
     duplicates = _find_duplicate_columns(mf)
-    errlist = list(duplicates.items())
-    logger.debug("found {} errors".format(len(errlist)))
+    errlist = [
+        errors.DuplicateColumnError(
+            locations=locations,
+            message='duplicate column {}'.format(col)
+        )
+        for col, locations in duplicates.items()
+    ]
+    logger.debug('found {} errors'.format(len(errlist)))
     return errlist
 
 
