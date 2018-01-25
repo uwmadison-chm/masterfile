@@ -45,7 +45,9 @@ def main(argv=None):
     mf = masterfile.load(pargs['<masterfile_path>'])
     errors = validator.run_all_validators(mf)
     for e in errors:
-        print(e)
+        print(e.message)
+        for loc in e.locations:
+            print('  {}'.format(loc.format(True)))
     if errors:
         return ERRORS
     return CLEAN
