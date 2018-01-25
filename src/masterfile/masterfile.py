@@ -140,7 +140,19 @@ class Masterfile(object):
         for f in self._candidate_data_files:
             df = None
             try:
-                df = pd.read_csv(f, dtype=str)
+                # pandas.read_csv will rename duplicate column headers to make
+                # them unique. That's not what we want at all -- we want to
+                # check for duplicate column names ourselves. Pandas *does*
+                # allow duplicate column names, so we can override read_csv's
+                # behavior by having it not look for headers, then using the
+                # first row as the dataframe's headers.
+                # This is kind of ridiculous but probably better than reading
+                # the CSV by some other mechanism.
+                df_in = pd.read_csv(f, dtype=str, header=None)
+                df = df_in.rename(
+                    columns=df_in.iloc[0],
+                    copy=False
+                ).iloc[1:].reset_index(drop=True)
             except IOError as e:
                 self.errors.append(errors.FileReadError(
                     location=[f],
