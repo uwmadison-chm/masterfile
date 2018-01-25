@@ -99,14 +99,14 @@ class Masterfile(object):
         except IOError as e:
             mf = klass()
             mf.errors.append(errors.FileReadError(
-                location=[settings_file],
+                locations=[settings_file],
                 message="Can't read settings file",
                 root_exception=e))
             return mf
         except ValueError as e:
             mf = klass()
             mf.errors.append(errors.JSONError(
-                location=[settings_file],
+                locations=[settings_file],
                 message="JSON reading error",
                 root_exception=e))
             return mf
@@ -155,8 +155,8 @@ class Masterfile(object):
                 ).iloc[1:].reset_index(drop=True)
             except IOError as e:
                 self.errors.append(errors.FileReadError(
-                    location=[f],
-                    message="Can't read {}".format(f),
+                    locations=[f],
+                    message="can't read {}".format(f),
                     root_exception=e
                 ))
             self._unprocessed_dataframes.append(df)
@@ -172,8 +172,8 @@ class Masterfile(object):
                 self._dataframes.append(df)
             except LookupError as e:
                 self.errors.append(errors.IndexNotFoundError(
-                    location=[f],
-                    message="Can't set index column to {}".format(
+                    locations=[f],
+                    message="index column {} not found".format(
                         self.index_column),
                     root_exception=e
                 ))

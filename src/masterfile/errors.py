@@ -16,13 +16,21 @@ from . import formatters
 @attr.s
 class Error(object):
 
-    location = attr.ib()
+    locations = attr.ib()
 
     message = attr.ib()
 
     root_exception = attr.ib(default=None)
 
     code = None
+
+    @property
+    def sorted_locations(self):
+        def location_key(loc):
+            if not hasattr(loc, 'filename'):
+                return [loc, None, None]
+            return [loc.filename, loc.line_number, loc.column_number]
+        return sorted(self.locations, key=location_key)
 
 
 class ColumnError(Error):
