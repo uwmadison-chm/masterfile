@@ -6,20 +6,17 @@
 # at the University of Wisconsin-Madison.
 # Released under MIT licence; see LICENSE at the package root.
 
-
 import logging
 
 from masterfile import errors
-
 
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def validate(mf):
-    logger.debug('index_column_validator:validate()')
-    errlist = [
-        e for e in mf.errors if isinstance(e, errors.IndexNotFoundError)]
+def validate(masterfile):
+    logger.debug("validators.io:validate()")
+    errlist = [e for e in masterfile.errors if isinstance(e, errors.IOError)]
     logger.debug("found {} errors".format(len(errlist)))
     return errlist

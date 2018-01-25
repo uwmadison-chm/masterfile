@@ -9,22 +9,18 @@
 
 from __future__ import absolute_import
 
-from ..test_masterfile import GOOD_PATH, PROBLEMS_PATH
-
 import masterfile
 from masterfile import errors
-from masterfile.validators import index_column_validator
+from masterfile.validators import index_column
 
 
-class TestIndexColumnValidator(object):
+class TestIndexColumn(object):
 
-    def test_returns_no_error_for_good_mf(self):
-        mf = masterfile.load(GOOD_PATH)
-        ers = index_column_validator.validate(mf)
+    def test_returns_no_error_for_good_mf(self, good_mf):
+        ers = index_column.validate(good_mf)
         assert len(ers) == 0
 
-    def test_returns_error_with_bad_col_id(self):
-        mf = masterfile.load(PROBLEMS_PATH)
-        ers = index_column_validator.validate(mf)
+    def test_returns_error_with_bad_col_id(self, problems_mf):
+        ers = index_column.validate(problems_mf)
         assert len(ers) == 1
         assert isinstance(ers[0], errors.IndexNotFoundError)

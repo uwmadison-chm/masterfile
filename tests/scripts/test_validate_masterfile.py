@@ -12,8 +12,6 @@ from __future__ import absolute_import
 import pytest
 from os import path
 
-from ..test_masterfile import GOOD_PATH
-
 from masterfile.scripts import validate_masterfile
 
 
@@ -30,12 +28,20 @@ class TestValidateMasterfile(object):
         assert out.startswith('Validate')
         assert err == ''
 
-    def test_retval_zero_for_good_dir(self, capsys):
-        retval = validate_masterfile.main([GOOD_PATH])
+    def test_retval_zero_for_good_dir(self, good_path, capsys):
+        retval = validate_masterfile.main([good_path])
         out, _err = capsys.readouterr()
         assert out == ''
         assert retval == 0
 
-    def test_retval_nonzero_for_bad_dir(self):
-        retval = validate_masterfile.main([path.join(GOOD_PATH, '..')])
+    def test_retval_nonzero_for_bad_dir(self, example_path, capsys):
+        retval = validate_masterfile.main([example_path])
+        out, _err = capsys.readouterr()
         assert not retval == 0
+        assert len(out) > 0
+
+    def test_retval_nonzero_for_problems_dir(self, problems_path, capsys):
+        retval = validate_masterfile.main([problems_path])
+        out, _err = capsys.readouterr()
+        assert not retval == 0
+        assert len(out) > 0
