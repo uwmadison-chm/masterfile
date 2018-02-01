@@ -21,6 +21,15 @@ class TestIndexColumn(object):
         assert len(ers) == 0
 
     def test_returns_error_with_bad_col_id(self, problems_mf):
-        ers = index_column.validate(problems_mf)
-        assert len(ers) == 1
-        assert isinstance(ers[0], errors.IndexNotFoundError)
+        ers = index_column._find_missing_index_columns(problems_mf)
+        assert ers
+
+    def test_returns_error_with_duplicate_col(self, problems_mf):
+        ers = index_column._find_masterfile_duplicate_indexes(problems_mf)
+        assert ers
+
+    def test_returns_error_with_missing_value(self, problems_mf):
+        ers = index_column._find_missing_index_values(problems_mf)
+        assert ers
+        locs = ers[0].locations
+        assert len(locs) == 2

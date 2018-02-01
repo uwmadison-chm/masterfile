@@ -37,12 +37,24 @@ class ColumnError(Error):
     code = 'E1'
 
 
-class IndexNotFoundError(ColumnError):
+class DuplicateColumnError(ColumnError):
     code = 'E101'
 
 
-class DuplicateColumnError(ColumnError):
-    code = 'E102'
+class IndexError(Error):
+    code = 'E2'
+
+
+class IndexNotFoundError(IndexError):
+    code = 'E201'
+
+
+class DuplicateIndexValueError(IndexError):
+    code = 'E202'
+
+
+class MissingIndexValueError(IndexError):
+    code = 'E203'
 
 
 class SettingsError(Error):
@@ -75,6 +87,18 @@ class Location(object):
     column_number = attr.ib(default=None)
 
     comment = attr.ib(default=None)
+
+    @classmethod
+    def from_row_index(
+            klass, filename, row_index, column_number=None, comment=None):
+        # We add 2 to row index: one to switch to one-based indexing,
+        # and one for the header row.
+        line_number = row_index + 2
+        return klass(
+            filename=filename,
+            line_number=line_number,
+            column_number=column_number,
+            comment=comment)
 
     def format(self, col_as_letters=True):
         return '{}{}{}{}'.format(

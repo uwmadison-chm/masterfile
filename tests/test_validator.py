@@ -31,6 +31,16 @@ class TestValidator(object):
         ers = validator.run_all_validators(problems_mf)
         assert instance_filter(ers, errors.IndexNotFoundError)
 
+    def test_probelms_path_has_duplicate_index_error(self, problems_mf):
+        assert instance_filter(
+            validator.run_all_validators(problems_mf),
+            errors.DuplicateIndexValueError)
+
+    def test_probelms_path_has_missing_index_value_error(self, problems_mf):
+        assert instance_filter(
+            validator.run_all_validators(problems_mf),
+            errors.MissingIndexValueError)
+
     def test_problems_path_has_duplicate_error(self, problems_mf):
         ers = validator.run_all_validators(problems_mf)
         assert instance_filter(ers, errors.DuplicateColumnError)

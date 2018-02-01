@@ -10,7 +10,7 @@
 The Validator takes a masterfile path and runs a set of checks on the contents.
 We validate:
 
-* All data files have the index column as the first column
+* All data files have the index column
 * There are no blanks in the index column
 * There are no repeats in the index column for a file
 * All other columns have len(components) parts, separated by _
