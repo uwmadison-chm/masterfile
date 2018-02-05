@@ -32,7 +32,7 @@ Basically, you want Excel-for-Windows-style CSV files with no UTF-8 signature.
 ## Dictionaries
 
 * CSV format
-* Has AT LEAST two columns: component, variable_short
+* Has AT LEAST two columns: component, short_name
 * Those are the indexes
 * There shouldn't be any repeats in the index
 * The settings.json file should contain a "components" thing that says what should exist in the component column
