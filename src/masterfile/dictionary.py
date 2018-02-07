@@ -41,6 +41,9 @@ from masterfile import errors
 from masterfile.vendor import attr
 
 
+INDEX_COLS = ['component', 'short_name']
+
+
 @attr.s
 class Dictionary(object):
 
@@ -72,6 +75,9 @@ class Dictionary(object):
     def load_for_masterfile(klass, mf):
         dictionary_path = path.join(mf.root_path, 'dictionary')
         d = klass(mf, mf.components, dictionary_path)
+        d._find_candidate_files()
+        d._read_unprocessed_dataframes()
+        d._process_dataframes()
         return d
 
     def _find_candidate_files(self):
@@ -90,3 +96,17 @@ class Dictionary(object):
                     root_exception=e
                 ))
             self._unprocessed_dataframes.append(df)
+
+    def _process_dataframes(self):
+        for f, udf in zip(self._candidate_files, self._unprocessed_dataframes):
+            try:
+                df = udf.set_index(INDEX_COLS)
+                self._loaded_dataframes.append(df)
+                self._loaded_files.append(f)
+            except LookupError as e:
+                self.error_list.append(errors.IndexNotFoundError(
+                    locations=[f],
+                    message='unable to find dictionary index {}'.format(
+                        INDEX_COLS)),
+                    root_exception=e
+                )

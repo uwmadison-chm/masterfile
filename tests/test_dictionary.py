@@ -30,3 +30,19 @@ class TestDictionary(object):
         d._find_candidate_files()
         d._read_unprocessed_dataframes()
         assert d._unprocessed_dataframes
+
+    def test_processes_dataframes(self, good_mf):
+        d = Dictionary(
+            good_mf,
+            good_mf.components,
+            path.join(good_mf.root_path, 'dictionary'))
+        d._find_candidate_files()
+        d._read_unprocessed_dataframes()
+        d._process_dataframes()
+        assert d._loaded_dataframes
+        assert d._loaded_files
+
+    def test_load_processes_dataframes(self, good_mf):
+        d = Dictionary.load_for_masterfile(good_mf)
+        assert d._loaded_dataframes
+        assert d._loaded_files
