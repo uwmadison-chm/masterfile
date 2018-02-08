@@ -39,10 +39,19 @@ class TestDictionary(object):
         d._find_candidate_files()
         d._read_unprocessed_dataframes()
         d._process_dataframes()
+        assert not d.error_list
         assert d._loaded_dataframes
         assert d._loaded_files
 
-    def test_load_processes_dataframes(self, good_mf):
+    def test_load_for_masterfile(self, good_mf):
         d = Dictionary.load_for_masterfile(good_mf)
         assert d._loaded_dataframes
         assert d._loaded_files
+
+    def test_dict_dataframe(self, good_mf):
+        d = Dictionary.load_for_masterfile(good_mf)
+        assert 'contact' in d.df.columns
+
+    def test_load_records_errors(self, problems_mf):
+        d = Dictionary.load_for_masterfile(problems_mf)
+        assert d.error_list

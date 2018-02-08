@@ -19,14 +19,21 @@ masterfiles' columns, as so:
 
 Dictionary:
 
-component,short_name,contact
-timepoint,t1,
-measure,ourMeas,Leslie Smith
-...
+component,short_name,contact,long_name
+timepoint,t1,,Time 1
+measure,ourMeas,Jordan Smith,Our Measure
 
-API:
->>> mf.df['t1_ourMeas'].contact
-[('ourMeas', 'Leslie Smith')]
+
+Results in masterfile annotation:
+>>> mf.df.t1_ourMeas.long_name
+{
+    't1': 'Time 1',
+    'ourMeas': 'Our Measure'
+}
+>>> mf.df.t1_ourMeas.contact
+{
+    'ourMeas': 'Jordan Smith'
+}
 """
 
 from __future__ import absolute_import, unicode_literals
@@ -63,9 +70,14 @@ class Dictionary(object):
 
     _loaded_dataframes = attr.ib(default=attr.Factory(list))
 
+    _dataframe = attr.ib(default=None)
+
     @property
     def dataframe(self):
-        pass
+        if self._dataframe:
+            return self._dataframe
+        self._dataframe = pd.concat(self._loaded_dataframes)
+        return self._dataframe
 
     @property
     def df(self):
@@ -107,6 +119,6 @@ class Dictionary(object):
                 self.error_list.append(errors.IndexNotFoundError(
                     locations=[f],
                     message='unable to find dictionary index {}'.format(
-                        INDEX_COLS)),
+                        INDEX_COLS),
                     root_exception=e
-                )
+                ))
