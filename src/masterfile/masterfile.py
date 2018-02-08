@@ -140,19 +140,7 @@ class Masterfile(object):
         for f in self._candidate_data_files:
             df = None
             try:
-                # pandas.read_csv will rename duplicate column headers to make
-                # them unique. That's not what we want at all -- we want to
-                # check for duplicate column names ourselves. Pandas *does*
-                # allow duplicate column names, so we can override read_csv's
-                # behavior by having it not look for headers, then using the
-                # first row as the dataframe's headers.
-                # This is kind of ridiculous but probably better than reading
-                # the CSV by some other mechanism.
-                df_in = pd.read_csv(f, dtype=str, header=None)
-                df = df_in.rename(
-                    columns=df_in.iloc[0],
-                    copy=False
-                ).iloc[1:].reset_index(drop=True)
+                df = read_csv_no_alterations(f)
             except IOError as e:
                 self.errors.append(errors.FileReadError(
                     locations=[f],
@@ -185,6 +173,20 @@ class Masterfile(object):
             dtype={self.index_column: str})
         return df
 
-    def _load_dictionary_csv(self, filename):
-        df = pd.read_csv(filename, index_col=False, dtype=str)
-        return df
+
+def read_csv_no_alterations(csv_file):
+    """
+    pandas.read_csv will rename duplicate column headers to make them unique.
+    That's not what we want at all -- we want to check for duplicate column
+    names ourselves. Pandas *does* allow duplicate column names, so we can
+    override read_csv's behavior by having it not look for headers, then using
+    the first row as the dataframe's headers.
+    This is kind of ridiculous but probably better than reading
+    the CSV by some other mechanism.
+    We're also setting dtype=str so pandas doesn't go converting and possibly
+    mangling things that look like numbers and/or dates.
+    """
+    df = pd.read_csv(csv_file, dtype=str, header=None)
+    df = df.rename(
+        columns=df.iloc[0], copy=False).iloc[1:].reset_index(drop=True)
+    return df
