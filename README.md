@@ -36,7 +36,7 @@ Basically, you want Excel-for-Windows-style CSV files with no UTF-8 signature.
 * Those are the indexes
 * There shouldn't be any repeats in the index
 * The settings.json file should contain a "components" thing that says what should exist in the component column
-* Things with blank component are ignored
+* Things with blank component are ignored (TODO: Maybe?)
 
 
 ## Exclusion files
