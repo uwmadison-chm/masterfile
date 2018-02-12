@@ -103,7 +103,7 @@ class Dictionary(object):
                 df = masterfile.read_csv_no_alterations(f)
             except IOError as e:
                 self.error_list.append(errors.FileReadError(
-                    locations=[f],
+                    locations=[errors.Location(f)],
                     message='unable to read dictionary file {}'.format(f),
                     root_exception=e
                 ))
