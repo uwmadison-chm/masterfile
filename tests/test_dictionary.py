@@ -52,6 +52,11 @@ class TestDictionary(object):
         d = Dictionary.load_for_masterfile(good_mf)
         assert 'contact' in d.df.columns
 
+    def test_dict_getitem(self, good_mf):
+        d = Dictionary.load_for_masterfile(good_mf)
+        result = d['measure', 'foo']
+        assert result.contact == 'Jordan'  # measure_contacts.csv
+
     def test_load_records_errors(self, problems_mf):
         d = Dictionary.load_for_masterfile(problems_mf)
         assert d.error_list
