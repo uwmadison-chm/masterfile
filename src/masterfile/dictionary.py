@@ -95,6 +95,17 @@ class Dictionary(object):
     def __getitem__(self, key):
         return self.df.loc[key]
 
+    def annotations_for(self, component, value):
+        """
+        Return all non-empty annotations for a component and value as a dict.
+        Empty annotations are filtered out which may result in an empty dict.
+        """
+        try:
+            data = self[component, value]
+        except KeyError:
+            return {}
+        return data.dropna().to_dict()
+
     def _find_candidate_files(self):
         self._candidate_files = glob(path.join(self.dictionary_path, '*csv'))
 

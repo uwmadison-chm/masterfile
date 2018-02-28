@@ -48,14 +48,18 @@ class TestDictionary(object):
         assert d._loaded_dataframes
         assert d._loaded_files
 
-    def test_dict_dataframe(self, good_mf):
-        d = Dictionary.load_for_masterfile(good_mf)
-        assert 'contact' in d.df.columns
+    def test_dict_dataframe(self, good_dict):
+        assert 'contact' in good_dict.df.columns
 
-    def test_dict_getitem(self, good_mf):
-        d = Dictionary.load_for_masterfile(good_mf)
-        result = d['measure', 'foo']
+    def test_dict_getitem(self, good_dict):
+        result = good_dict['measure', 'foo']
         assert result.contact == 'Jordan'  # measure_contacts.csv
+
+    def test_annotations_for(self, good_dict):
+        result = good_dict.annotations_for('measure', 'foo')
+        assert result['contact'] == 'Jordan'
+        assert not good_dict.annotations_for('timepoint', 't1')
+        assert not good_dict.annotations_for('missing', 'things')
 
     def test_load_records_errors(self, problems_mf):
         d = Dictionary.load_for_masterfile(problems_mf)

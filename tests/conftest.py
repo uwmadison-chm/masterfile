@@ -46,6 +46,11 @@ def good_mf():
 
 
 @pytest.fixture()
+def good_dict():
+    return masterfile.dictionary.Dictionary.load_for_masterfile(good_mf())
+
+
+@pytest.fixture()
 def nosettings_mf():
     return masterfile.load(example_path())
 
