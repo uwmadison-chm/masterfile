@@ -60,8 +60,6 @@ class Masterfile(object):
     # All filenames we're going to try to load.
     _candidate_data_files = attr.ib(default=attr.Factory(list))
 
-    _dictionaries = attr.ib(default=attr.Factory(list))
-
     # Everything in _dataframes, joined by pandas.concat. This is the
     # cached copy.
     # Accessed by the "dataframe" or "df" properties.
