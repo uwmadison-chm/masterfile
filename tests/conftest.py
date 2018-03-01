@@ -42,7 +42,7 @@ def problems_path():
 
 @pytest.fixture()
 def good_mf():
-    return masterfile.load(good_path())
+    return masterfile.masterfile.Masterfile.load_path(good_path())
 
 
 @pytest.fixture()
@@ -52,9 +52,9 @@ def good_dict():
 
 @pytest.fixture()
 def nosettings_mf():
-    return masterfile.load(example_path())
+    return masterfile.masterfile.Masterfile.load_path(example_path())
 
 
 @pytest.fixture()
 def problems_mf():
-    return masterfile.load(problems_path())
+    return masterfile.masterfile.Masterfile.load_path(problems_path())
