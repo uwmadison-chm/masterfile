@@ -53,7 +53,7 @@ class TestDictionary(object):
 
     def test_dict_getitem(self, good_dict):
         result = good_dict['measure', 'foo']
-        assert result.contact == 'Jordan'  # measure_contacts.csv
+        assert result['contact'] == 'Jordan'  # measure_contacts.csv
 
     def test_annotations_for(self, good_dict):
         result = good_dict.annotations_for('measure', 'foo')
