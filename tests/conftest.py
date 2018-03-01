@@ -42,14 +42,24 @@ def problems_path():
 
 @pytest.fixture()
 def good_mf():
-    return masterfile.load(good_path())
+    return masterfile.masterfile.Masterfile.load_path(good_path())
+
+
+@pytest.fixture()
+def good_dict():
+    return masterfile.dictionary.Dictionary.load_for_masterfile(good_mf())
+
+
+@pytest.fixture()
+def good_annotator():
+    return masterfile.annotator.Annotator(good_mf(), good_dict())
 
 
 @pytest.fixture()
 def nosettings_mf():
-    return masterfile.load(example_path())
+    return masterfile.masterfile.Masterfile.load_path(example_path())
 
 
 @pytest.fixture()
 def problems_mf():
-    return masterfile.load(problems_path())
+    return masterfile.masterfile.Masterfile.load_path(problems_path())

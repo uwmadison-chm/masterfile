@@ -74,7 +74,7 @@ class Dictionary(object):
 
     @property
     def dataframe(self):
-        if self._dataframe:
+        if self._dataframe is not None:
             return self._dataframe
         self._dataframe = pd.concat(self._loaded_dataframes)
         return self._dataframe
@@ -91,6 +91,20 @@ class Dictionary(object):
         d._read_unprocessed_dataframes()
         d._process_dataframes()
         return d
+
+    def __getitem__(self, key):
+        return self.df.loc[key]
+
+    def annotations_for(self, component, value):
+        """
+        Return all non-empty annotations for a component and value as a dict.
+        Empty annotations are filtered out which may result in an empty dict.
+        """
+        try:
+            data = self[component, value]
+        except KeyError:
+            return {}
+        return data.dropna().to_dict()
 
     def _find_candidate_files(self):
         self._candidate_files = glob(path.join(self.dictionary_path, '*csv'))
