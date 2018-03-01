@@ -51,6 +51,11 @@ def good_dict():
 
 
 @pytest.fixture()
+def good_annotator():
+    return masterfile.annotator.Annotator(good_mf(), good_dict())
+
+
+@pytest.fixture()
 def nosettings_mf():
     return masterfile.masterfile.Masterfile.load_path(example_path())
 
