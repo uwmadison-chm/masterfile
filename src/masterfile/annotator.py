@@ -27,6 +27,11 @@ from collections import defaultdict
 from masterfile.vendor import attr
 
 
+def annotate_masterfile(mf):
+    ann = Annotator.from_masterfile(mf)
+    ann.annotate_masterfile()
+
+
 @attr.s
 class Annotator(object):
 
@@ -38,7 +43,7 @@ class Annotator(object):
 
     @classmethod
     def from_masterfile(klass, mf):
-        return klass.new(masterfile=mf, dictionary=mf.dictionary)
+        return klass(masterfile=mf, dictionary=mf.dictionary)
 
     def annotate_masterfile(self):
         self.annotate_dataframe(self.masterfile.dataframe)

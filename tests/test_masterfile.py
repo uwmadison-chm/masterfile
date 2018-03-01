@@ -62,3 +62,13 @@ class TestMasterfile(object):
     def test_loaded_dataframe_has_proper_index_name(self, good_path):
         mf = masterfile.Masterfile.load_path(good_path)
         assert mf.df.index.name == mf.index_column
+
+    def test_load_and_annotate(self, good_path):
+        mf = masterfile.Masterfile.load_and_annotate(good_path)
+        assert mf.dictionary is not None
+        assert mf.df.sr_t1_foo_var1.contact['measure_foo'] == 'Jordan'
+
+    def test_module_level_load(self, good_path):
+        mf = masterfile.load(good_path)
+        assert mf.dictionary is not None
+        assert mf.df.sr_t1_foo_var1.contact['measure_foo'] == 'Jordan'

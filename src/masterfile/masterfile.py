@@ -16,10 +16,12 @@ import pandas as pd
 
 from .vendor import attr
 from . import errors
+from . import dictionary
+from . import annotator
 
 
 def load(path):
-    return Masterfile.load_path(path)
+    return Masterfile.load_and_annotate(path)
 
 
 @attr.s
@@ -41,6 +43,10 @@ class Masterfile(object):
     # this is not a full-scale validation of the masterfile data, just the
     # things we can't avoid finding while loading the data.
     errors = attr.ib(default=attr.Factory(list))
+
+    # A structure with documentation on all components of masterfile
+    # data columns.
+    dictionary = attr.ib(default=None)
 
     # _dataframes and _loaded_data_files will be the same length.
     # The items in _dataframes will have index set to index_column and may
@@ -83,8 +89,7 @@ class Masterfile(object):
     @classmethod
     def load_path(klass, root_path):
         """
-        Initialize a Masterfile from root_path/settings.json, load all .csv
-        data and dictionaries into it.
+        Read settings.json and load a masterfile from it. Do
         """
         json_data = None
         settings_file = klass._settings_filename(root_path)
@@ -108,6 +113,17 @@ class Masterfile(object):
                 message="JSON reading error",
                 root_exception=e))
             return mf
+
+    @classmethod
+    def load_and_annotate(klass, root_path):
+        """
+        Load a masterfile by path, read dictionaries, and annotate the
+        masterfile's dataframe with dictionary data.
+        """
+        mf = klass.load_path(root_path)
+        mf.dictionary = dictionary.Dictionary.load_for_masterfile(mf)
+        annotator.annotate_masterfile(mf)
+        return mf
 
     @classmethod
     def _settings_filename(klass, root_path):

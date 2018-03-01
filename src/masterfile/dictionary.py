@@ -43,9 +43,8 @@ from glob import glob
 
 import pandas as pd
 
-from masterfile import masterfile
-from masterfile import errors
-from masterfile.vendor import attr
+from . import errors
+from .vendor import attr
 
 
 INDEX_COLS = ['component', 'short_name']
@@ -110,6 +109,7 @@ class Dictionary(object):
         self._candidate_files = glob(path.join(self.dictionary_path, '*csv'))
 
     def _read_unprocessed_dataframes(self):
+        from masterfile import masterfile
         self._unprocessed_dataframes = []
         for f in self._candidate_files:
             df = None

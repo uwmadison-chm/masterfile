@@ -42,7 +42,7 @@ def main(argv=None):
     if pargs['--verbose']:
         logger.setLevel(logging.DEBUG)
     logger.debug(pargs)
-    mf = masterfile.load(pargs['<masterfile_path>'])
+    mf = masterfile.masterfile.Masterfile.load_path(pargs['<masterfile_path>'])
     errors = validator.run_all_validators(mf)
     for e in errors:
         print(e.message)

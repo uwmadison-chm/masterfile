@@ -9,7 +9,7 @@
 
 from __future__ import absolute_import
 
-import masterfile
+from masterfile.masterfile import Masterfile
 from masterfile import errors
 from masterfile.validators import io
 
@@ -21,7 +21,7 @@ class TestIO(object):
         assert len(result) == 0
 
     def test_file_read_error_for_missing_settings(self, nosettings_mf):
-        mf = masterfile.load(nosettings_mf)
+        mf = Masterfile.load_path(nosettings_mf)
         result = io.validate(mf)
         assert len(result) == 1
         assert isinstance(result[0], errors.FileReadError)
