@@ -46,7 +46,7 @@ class Masterfile(object):
 
     # A structure with documentation on all components of masterfile
     # data columns.
-    dictionary = attr.ib(default=None)
+    dictionary = attr.ib(default=None, repr=False)
 
     # _dataframes and _loaded_data_files will be the same length.
     # The items in _dataframes will have index set to index_column and may
