@@ -118,18 +118,6 @@ class Location(object):
             column_number=column_number,
             comment=comment)
 
-    @classmethod
-    def from_row_index(
-            klass, filename, row_index, column_number=None, comment=None):
-        # We add 2 to row index: one to switch to one-based indexing,
-        # and one for the header row.
-        line_number = row_index + 2
-        return klass(
-            filename=filename,
-            line_number=line_number,
-            column_number=column_number,
-            comment=comment)
-
     def format(self, col_as_letters=True):
         return '{}{}{}{}'.format(
             self._format_filename(),
