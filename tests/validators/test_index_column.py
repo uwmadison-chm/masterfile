@@ -9,8 +9,6 @@
 
 from __future__ import absolute_import
 
-import masterfile
-from masterfile import errors
 from masterfile.validators import index_column
 
 
