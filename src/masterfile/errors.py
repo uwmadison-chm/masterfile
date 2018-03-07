@@ -41,6 +41,10 @@ class DuplicateColumnError(ColumnError):
     code = 'E101'
 
 
+class ColumnFormatError(ColumnError):
+    code = 'E102'
+
+
 class IndexError(Error):
     code = 'E2'
 

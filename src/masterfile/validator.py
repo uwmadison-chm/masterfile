@@ -34,6 +34,7 @@ VALIDATOR_CHAIN = [
     validators.io,
     validators.index_column,
     validators.duplicate_column,
+    validators.column_format,
 ]
 
 

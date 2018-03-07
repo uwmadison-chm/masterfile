@@ -4,4 +4,5 @@ from . import (  # noqa: F401
     io,
     index_column,
     duplicate_column,
+    column_format,
 )
