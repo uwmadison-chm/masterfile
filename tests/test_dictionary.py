@@ -55,6 +55,10 @@ class TestDictionary(object):
         result = good_dict['measure', 'foo']
         assert result['contact'] == 'Jordan'  # measure_contacts.csv
 
+    def test_dict_contains(self, good_dict):
+        assert ('measure', 'foo') in good_dict
+        assert ('measure', 'missing') not in good_dict
+
     def test_annotations_for(self, good_dict):
         result = good_dict.annotations_for('measure', 'foo')
         assert result['contact'] == 'Jordan'

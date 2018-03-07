@@ -94,6 +94,13 @@ class Dictionary(object):
     def __getitem__(self, key):
         return self.df.loc[key]
 
+    def __contains__(self, key):
+        try:
+            self[key]
+            return True
+        except KeyError:
+            return False
+
     def annotations_for(self, component, value):
         """
         Return all non-empty annotations for a component and value as a dict.
