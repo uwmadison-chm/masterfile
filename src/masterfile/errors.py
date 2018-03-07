@@ -41,6 +41,10 @@ class DuplicateColumnError(ColumnError):
     code = 'E101'
 
 
+class ColumnFormatError(ColumnError):
+    code = 'E102'
+
+
 class IndexError(Error):
     code = 'E2'
 
@@ -89,11 +93,29 @@ class Location(object):
     comment = attr.ib(default=None)
 
     @classmethod
-    def from_row_index(
-            klass, filename, row_index, column_number=None, comment=None):
-        # We add 2 to row index: one to switch to one-based indexing,
-        # and one for the header row.
-        line_number = row_index + 2
+    def smart_create(
+            klass,
+            filename,
+            line_number=None,
+            column_number=None,
+            row_index=None,
+            column_index=None,
+            comment=None):
+        if (line_number is not None and row_index is not None):
+            raise AttributeError(
+                "Can't specify both line_number and row_index")
+
+        if (column_number is not None and column_index is not None):
+            raise AttributeError(
+                "Can't specify both column_number and column_index")
+
+        if row_index is not None:
+            # One for the header row, one for one-based indexing
+            line_number = row_index + 2
+
+        if column_index is not None:
+            column_number = column_index + 1
+
         return klass(
             filename=filename,
             line_number=line_number,

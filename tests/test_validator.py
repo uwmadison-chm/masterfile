@@ -44,3 +44,8 @@ class TestValidator(object):
     def test_problems_path_has_duplicate_error(self, problems_mf):
         ers = validator.run_all_validators(problems_mf)
         assert instance_filter(ers, errors.DuplicateColumnError)
+
+    def test_problems_path_has_column_format_error(self, problems_mf):
+        ers = validator.run_all_validators(problems_mf)
+        assert instance_filter(ers, errors.ColumnFormatError)
+

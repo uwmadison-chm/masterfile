@@ -49,7 +49,7 @@ def _find_dataframe_duplicate_indexes(df, index_column_name, filename):
     index_col = df[index_column_name]
     index_locations = defaultdict(list)
     for i, index_val in enumerate(index_col):
-        loc = errors.Location.from_row_index(
+        loc = errors.Location.smart_create(
             filename=filename, row_index=i)
         index_locations[index_val].append(loc)
     duplicate_locations = {
@@ -68,7 +68,7 @@ def _find_missing_index_values(mf):
         blank_row_indexes = df.index[
             df[mf.index_column].fillna('').str.strip() == '']
         blank_row_locations = [
-            errors.Location.from_row_index(filename=f, row_index=i)
+            errors.Location.smart_create(filename=f, row_index=i)
             for i in blank_row_indexes
         ]
         if not blank_row_locations:

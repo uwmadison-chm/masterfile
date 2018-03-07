@@ -48,9 +48,9 @@ def _map_column_locations(mf):
     column_locations = defaultdict(list)
     for f, df in zip(mf._candidate_data_files, mf._unprocessed_dataframes):
         for col_index, col_name in enumerate(df.columns):
-            column_locations[col_name].append(errors.Location(
-                filename=f, column_number=(col_index + 1)
-            ))
+            column_locations[col_name].append(errors.Location.smart_create(
+                filename=f, column_index=col_index
+        ))
     return column_locations
 
 
