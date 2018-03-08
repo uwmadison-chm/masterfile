@@ -187,6 +187,12 @@ class Masterfile(object):
             dtype={self.index_column: str})
         return df
 
+    def column_components(self, column_name):
+        column_parts = column_name.split('_')
+        if len(column_parts) != len(self.components):
+            return []
+        return zip(self.components, column_parts)
+
 
 def read_csv_no_alterations(csv_file):
     """

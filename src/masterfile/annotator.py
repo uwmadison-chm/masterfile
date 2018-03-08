@@ -69,8 +69,7 @@ class Annotator(object):
         a clear way to clean it up.
         """
         d = defaultdict(dict)
-        components = self.masterfile.components
-        for comp, val in match_column_components(components, series_name):
+        for comp, val in self.masterfile.column_components(series_name):
             label = '{}_{}'.format(comp, val)
             component_annotations = self.dictionary.annotations_for(comp, val)
             for ann_label, ann_value in component_annotations.items():
@@ -82,8 +81,3 @@ class Annotator(object):
         for attribute, values in annotations.items():
             series._metadata.append(attribute)
             setattr(series, attribute, values)
-
-
-def match_column_components(components, column_name):
-    ccs = column_name.split('_')
-    return zip(components, ccs)
