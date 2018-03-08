@@ -46,6 +46,11 @@ def good_mf():
 
 
 @pytest.fixture()
+def full_good_mf():
+    return masterfile.load(good_path())
+
+
+@pytest.fixture()
 def good_dict():
     return masterfile.dictionary.Dictionary.load_for_masterfile(good_mf())
 
@@ -63,3 +68,8 @@ def nosettings_mf():
 @pytest.fixture()
 def problems_mf():
     return masterfile.masterfile.Masterfile.load_path(problems_path())
+
+
+@pytest.fixture()
+def full_problems_mf():
+    return masterfile.load(problems_path())
