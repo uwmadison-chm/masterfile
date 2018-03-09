@@ -5,4 +5,5 @@ from . import (  # noqa: F401
     index_column,
     duplicate_column,
     column_format,
+    components_in_dictionary,
 )
