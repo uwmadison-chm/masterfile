@@ -49,3 +49,7 @@ class TestValidator(object):
         ers = validator.run_all_validators(problems_mf)
         assert instance_filter(ers, errors.ColumnFormatError)
 
+    def test_problems_path_has_component_not_in_dictionary_error(
+            self, full_problems_mf):
+        ers = validator.run_all_validators(full_problems_mf)
+        assert instance_filter(ers, errors.ComponentNotInDictionaryError)

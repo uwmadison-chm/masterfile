@@ -45,6 +45,10 @@ class ColumnFormatError(ColumnError):
     code = 'E102'
 
 
+class ComponentNotInDictionaryError(ColumnError):
+    code = 'E103'
+
+
 class IndexError(Error):
     code = 'E2'
 
