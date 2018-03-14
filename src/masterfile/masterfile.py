@@ -89,30 +89,31 @@ class Masterfile(object):
     @classmethod
     def load_path(klass, root_path):
         """
-        Read settings.json and load a masterfile from it. Do
         """
+        mf = klass.find_settings_file_and_construct(root_path)
+        if not mf.errors:
+            mf._find_and_load_files()
+        return mf
+
+    @classmethod
+    def find_settings_file_and_construct(klass, root_path):
         json_data = None
         settings_file = klass._settings_filename(root_path)
+        mf = klass()
         try:
             json_data = klass._read_settings_json(settings_file)
             mf = klass(**json_data)
-            mf._find_and_load_files()
-            return mf
-
         except IOError as e:
-            mf = klass()
             mf.errors.append(errors.FileReadError(
                 locations=[errors.Location(settings_file)],
                 message="Can't read settings file",
                 root_exception=e))
-            return mf
         except ValueError as e:
-            mf = klass()
             mf.errors.append(errors.JSONError(
                 locations=[errors.Location(settings_file)],
                 message="JSON reading error",
                 root_exception=e))
-            return mf
+        return mf
 
     @classmethod
     def load_and_annotate(klass, root_path):
@@ -138,6 +139,11 @@ class Masterfile(object):
         data = json.load(open(filename, 'r'))
         data['root_path'] = path.dirname(filename)
         return data
+
+    def _load_dictionary(self):
+        if self.root_path is None:
+            return
+        self.dictionary = dictionary.Dictionary.load_for_masterfile(self)
 
     def _find_and_load_files(self):
         self.errors = []

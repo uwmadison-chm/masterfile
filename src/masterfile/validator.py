@@ -16,7 +16,6 @@ We validate:
 * All other columns have len(components) parts, separated by _
 * No column names are repeated
 * All component parts are included in the dictionary
-* There are no dictionary entries not represented in the data files
 * Places with missing data have exlusion codes
 
 As we do this, we'll keep track of where the data is from, so we can tell
