@@ -32,7 +32,7 @@ class TestValidateMasterfile(object):
     def test_retval_zero_for_good_dir(self, good_path, capsys):
         retval = validate_masterfile.main([good_path])
         out, err = capsys.readouterr()
-        assert out == ''
+        assert out.startswith('No problems found')
         assert err == ''
         assert retval == 0
 
@@ -50,9 +50,10 @@ class TestValidateMasterfile(object):
         assert 'problems' in out
 
     def test_retval_nonzero_for_good_with_problem_files(
-            self, good_path, problems_path):
+            self, good_path, problems_path, capsys):
         problem_file = glob.glob(path.join(problems_path, '*csv'))[0]
         retval = validate_masterfile.main([good_path, problem_file])
-        # assert not retval == 0
-        # assert len(out) > 0
-        # assert 'problems' in out
+        out, _err = capsys.readouterr()
+        assert not retval == 0
+        assert len(out) > 0
+        assert 'problems' in out
