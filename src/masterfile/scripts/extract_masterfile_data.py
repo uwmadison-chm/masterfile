@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 # Part of the masterfile package: https://github.com/njvack/masterfile
-# Copyright (c) 2017 Board of Regents of the University of Wisconsin System
+# Copyright (c) 2018 Board of Regents of the University of Wisconsin System
 # Written by Nate Vack <njvack@wisc.edu> at the Center for Healthy Minds
 # at the University of Wisconsin-Madison.
 # Released under MIT licence; see LICENSE at the package root.
 
 """ Extract masterfile-formatted data from a CSV file.
 
-Usage: extract_masterfile_data [options] <masterfile_path> <data_file>
+Usage: extract_masterfile_data [options] <masterfile_path> <data> <outfile>
 
 Takes a CSV file with a mix of data destined for a masterfile and other data,
 and extracts and formats the data to masterfile format, writing the result
@@ -34,6 +34,7 @@ from __future__ import absolute_import, unicode_literals
 import sys
 import re
 import logging
+from contextlib import contextmanager
 
 import pandas as pd
 
@@ -51,11 +52,23 @@ def main(argv=None):
     if pargs['--verbose']:
         logger.setLevel(logging.DEBUG)
     logger.debug(pargs)
-    df = pd.read_csv(pargs['<data_file>'], dtype=str)
+    df = pd.read_csv(pargs['<data>'], dtype=str)
     mf = Masterfile.load_path(pargs['<masterfile_path>'])
     formatted = format_dataframe_for_masterfile(
         df, mf, pargs['--index_column'], int(pargs['--skip']))
-    formatted.to_csv(sys.stdout, line_terminator='\r\n')
+    with file_or_stdout(pargs['<outfile>']) as output:
+        formatted.to_csv(output, line_terminator='\r\n')
+
+
+@contextmanager
+def file_or_stdout(filename):
+    if filename == '-':
+        logger.info('Writing to stdout')
+        yield sys.stdout
+    else:
+        with open(filename, 'w') as f:
+            logger.info('Writing to {}'.format(filename))
+            yield f
 
 
 def format_dataframe_for_masterfile(df, mf, input_index_col, skip_rows):

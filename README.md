@@ -32,11 +32,11 @@ Basically, you want Excel-for-Windows-style CSV files with no UTF-8 signature.
 ## Dictionaries
 
 * CSV format
-* Has AT LEAST two columns: component, variable_short
+* Has AT LEAST two columns: component, short_name
 * Those are the indexes
 * There shouldn't be any repeats in the index
 * The settings.json file should contain a "components" thing that says what should exist in the component column
-* Things with blank component are ignored
+* Things with blank component are ignored (TODO: Maybe?)
 
 
 ## Exclusion files
@@ -56,7 +56,6 @@ Basically, you want Excel-for-Windows-style CSV files with no UTF-8 signature.
 Here are some (all?) of the things to do to verify you have semantically reasonable data:
 
 * Variable parts not in dictionaries
-* Unused dictionary checks
 * Missing participant_id column
 * Repeated paticipant_id column
 * Blanks in participant_id column

@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 
 author = 'Nate Vack'
 email = 'njvack@wisc.edu'
-version = '0.1.0'
+version = '0.3.0'
 license = 'MIT license'
-copyright = 'Copyright (c) 2017 Board of Regents of the University of Wisconsin System'
+copyright = 'Copyright (c) 2018 Board of Regents of the University of Wisconsin System'
 url = 'https://github.com/njvack/masterfile'

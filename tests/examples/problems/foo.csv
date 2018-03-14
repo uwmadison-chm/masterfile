@@ -1,0 +1,7 @@
+ppt_id,sr_t1_foo_var1,sr_t1_foo_sum,dup_t1_one_file,dup_t1_one_file,dup_t1_two_files
+1001,3,3,dup1a,dup1b,dup2a
+1002,3,3,dup1a,dup1b,dup2a
+1003,1,2,dup1a,dup1b,dup2a
+1003,2,2,dup1a,bup1b,dup2a
+,999,999,dupa1,dup1b,dup2a
+   ,9,99,dupa1,dup1b,dup2a
