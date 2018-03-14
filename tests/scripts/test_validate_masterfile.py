@@ -11,6 +11,7 @@ from __future__ import absolute_import
 
 import pytest
 from os import path
+import glob
 
 from masterfile.scripts import validate_masterfile
 
@@ -30,8 +31,9 @@ class TestValidateMasterfile(object):
 
     def test_retval_zero_for_good_dir(self, good_path, capsys):
         retval = validate_masterfile.main([good_path])
-        out, _err = capsys.readouterr()
+        out, err = capsys.readouterr()
         assert out == ''
+        assert err == ''
         assert retval == 0
 
     def test_retval_nonzero_for_bad_dir(self, example_path, capsys):
@@ -45,3 +47,12 @@ class TestValidateMasterfile(object):
         out, _err = capsys.readouterr()
         assert not retval == 0
         assert len(out) > 0
+        assert 'problems' in out
+
+    def test_retval_nonzero_for_good_with_problem_files(
+            self, good_path, problems_path):
+        problem_file = glob.glob(path.join(problems_path, '*csv'))[0]
+        retval = validate_masterfile.main([good_path, problem_file])
+        # assert not retval == 0
+        # assert len(out) > 0
+        # assert 'problems' in out
