@@ -46,6 +46,10 @@ import pandas as pd
 from . import errors
 from .vendor import attr
 
+import logging
+logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 INDEX_COLS = ['component', 'short_name']
 
@@ -114,6 +118,8 @@ class Dictionary(object):
 
     def _find_candidate_files(self):
         self._candidate_files = glob(path.join(self.dictionary_path, '*csv'))
+        logger.debug(
+            'found dictionary files: {}'.format(self._candidate_files))
 
     def _read_unprocessed_dataframes(self):
         from masterfile import masterfile
@@ -134,6 +140,7 @@ class Dictionary(object):
         for f, udf in zip(self._candidate_files, self._unprocessed_dataframes):
             try:
                 df = udf.set_index(INDEX_COLS)
+                df.sort_index(level=INDEX_COLS, inplace=True)
                 self._loaded_dataframes.append(df)
                 self._loaded_files.append(f)
             except LookupError as e:
