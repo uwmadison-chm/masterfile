@@ -56,7 +56,6 @@ Basically, you want Excel-for-Windows-style CSV files with no UTF-8 signature.
 Here are some (all?) of the things to do to verify you have semantically reasonable data:
 
 * Variable parts not in dictionaries
-* Unused dictionary checks
 * Missing participant_id column
 * Repeated paticipant_id column
 * Blanks in participant_id column
