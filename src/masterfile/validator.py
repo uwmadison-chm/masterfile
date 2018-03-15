@@ -35,6 +35,7 @@ VALIDATOR_CHAIN = [
     validators.duplicate_column,
     validators.column_format,
     validators.components_in_dictionary,
+    validators.dictionary_format,
 ]
 
 

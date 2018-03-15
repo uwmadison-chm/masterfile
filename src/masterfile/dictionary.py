@@ -79,7 +79,10 @@ class Dictionary(object):
     def dataframe(self):
         if self._dataframe is not None:
             return self._dataframe
-        self._dataframe = pd.concat(self._loaded_dataframes)
+        if len(self._loaded_dataframes) > 0:
+            self._dataframe = pd.concat(self._loaded_dataframes)
+        else:
+            self._dataframe = pd.DataFrame()
         return self._dataframe
 
     @property
@@ -88,6 +91,9 @@ class Dictionary(object):
 
     @classmethod
     def load_for_masterfile(klass, mf):
+        if mf.root_path is None:
+            logger.debug("Trying to load a dictionary with no root_path")
+            return None
         dictionary_path = path.join(mf.root_path, 'dictionary')
         d = klass(mf, mf.components, dictionary_path)
         d._find_candidate_files()
@@ -144,7 +150,8 @@ class Dictionary(object):
                 self._loaded_dataframes.append(df)
                 self._loaded_files.append(f)
             except LookupError as e:
-                self.error_list.append(errors.IndexNotFoundError(
+                logger.debug("can't find dicationary index in {}".format(f))
+                self.error_list.append(errors.DictionaryIndexNotFoundError(
                     locations=[f],
                     message='unable to find dictionary index {}'.format(
                         INDEX_COLS),
