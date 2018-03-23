@@ -89,6 +89,10 @@ class Dictionary(object):
     def df(self):
         return self.dataframe
 
+    @property
+    def columns(self):
+        return self.dataframe.columns
+
     @classmethod
     def load_for_masterfile(klass, mf):
         if mf.root_path is None:
