@@ -55,10 +55,14 @@ def columns_to_index(columns, components):
 def populate_pretty_df(df, mf):
     d = mf.dictionary
     for index_val, dict_entries in d.df.iterrows():
-        logger.debug("Working on {}".format(index_val))
+        logger.debug('Working on {}'.format(index_val))
         key = '_'.join(index_val)
-        for dict_col, value in dict_entries.items():
-            df.loc[pandas.IndexSlice[:, key], dict_col] = value
+        for dict_col, value in dict_entries.iteritems():
+            try:
+                df.loc[pandas.IndexSlice[:, key], dict_col] = value
+            except KeyError:
+                logger.warn(
+                    'Dictionary contains unused entry {}'.format(index_val))
 
 
 def allocate_pretty_df(mf):
@@ -70,8 +74,12 @@ def allocate_pretty_df(mf):
 def write_pretty_dictionary(mf_path, output):
     mf = masterfile.load(mf_path)
     pretty_df = allocate_pretty_df(mf)
+    pretty_df = pretty_df[~pretty_df.index.duplicated(keep='first')]
+    original_index = pretty_df.index
+    pretty_df.sort_index(inplace=True)
     populate_pretty_df(pretty_df, mf)
-    pretty_df.to_csv(output)
+    reindexed = pretty_df.reindex(index=original_index)
+    reindexed.to_csv(output)
     return 0
 
 
