@@ -7,8 +7,6 @@
 # at the University of Wisconsin-Madison.
 # Released under MIT licence; see LICENSE at the package root.
 
-from masterfile import annotator
-
 
 class TestAnnotator(object):
 
