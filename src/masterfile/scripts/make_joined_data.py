@@ -45,7 +45,6 @@ def main(argv=None):
     logger.debug(pargs)
     output = pargs['<outfile>']
     if output == '-':
-        logger.info("sgtdout")
         output = sys.stdout
     make_joined_data(pargs['<masterfile_path>'], output)
 
