@@ -23,11 +23,7 @@ class TestExtractMasterfileData(object):
 
     @pytest.fixture
     def df(self):
-        return pd.read_csv(INPUT_FILE, dtype=str)
-
-    @pytest.fixture
-    def mf(self):
-        return Masterfile.load_path(GOOD_PATH)
+        return pd.read_csv(INPUT_FILE, dtype=str, na_filter=False)
 
     def test_raises_on_empty_params(self):
         with pytest.raises(SystemExit):
