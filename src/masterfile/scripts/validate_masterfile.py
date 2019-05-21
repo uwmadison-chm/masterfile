@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Part of the masterfile package: https://github.com/njvack/masterfile
+# Part of the masterfile package: https://github.com/uwmadison-chm/masterfile
 # Copyright (c) 2018 Board of Regents of the University of Wisconsin System
 # Written by Nate Vack <njvack@wisc.edu> at the Center for Healthy Minds
 # at the University of Wisconsin-Madison.

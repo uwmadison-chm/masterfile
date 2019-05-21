@@ -29,7 +29,7 @@ setup(
     description='Tools for organizing the variables of interest in a study',
     author='Nate Vack',
     author_email='njvack@wisc.edu',
-    url='https://github.com/njvack/masterfile',
+    url='https://github.com/uwmadison-chm/masterfile',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     include_package_data=True,
