@@ -9,14 +9,9 @@
 
 """ Make a blank template dictionary.
 
-Usage: make_blank_dictionary [options] <masterfile_path> <outfile>
-
 Takes a set of masterfile-formatted data files and outputs a dictionary with
 one row per component * label to <outfile>. Use '-' for <outfile> to write to
 stdout.
-
-Options:
-  -v, --verbose  Display debugging output
 """
 
 from __future__ import absolute_import, unicode_literals
@@ -28,20 +23,18 @@ from contextlib import contextmanager
 
 import masterfile
 from masterfile.masterfile import Masterfile  # Okay this is ridiculous
-from masterfile.vendor.docopt import docopt
 
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def main(argv=None):
-    pargs = docopt(__doc__, argv, version=masterfile.__package_version__)
-    if pargs['--verbose']:
+def main(args):
+    if args.verbose:
         logger.setLevel(logging.DEBUG)
-    logger.debug(pargs)
-    with file_or_stdout(pargs['<outfile>']) as output:
-        print_blank_dictionary(pargs['<masterfile_path>'], output)
+    logger.debug(args)
+    with file_or_stdout(args.out_file) as output:
+        print_blank_dictionary(args.masterfile_path, output)
 
 
 @contextmanager

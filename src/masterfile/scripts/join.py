@@ -9,15 +9,8 @@
 
 """ Join all masterfile data into a single .csv file
 
-Usage: make_joined_data [options] <masterfile_path> <outfile>
-
 Useful for processing in languages that don't have easy support for joining
 a bunch of csv files into one.
-
-Use '-' as outfile to write to stdout.
-
-Options:
-  -v, --verbose         Display debugging output
 """
 
 from __future__ import absolute_import, unicode_literals
@@ -25,7 +18,6 @@ from __future__ import absolute_import, unicode_literals
 import sys
 
 import masterfile
-from masterfile.vendor.docopt import docopt
 
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
@@ -38,14 +30,13 @@ def make_joined_data(masterfile_path, output_file):
     mf.dataframe.to_csv(output_file, line_terminator='\r\n')
 
 
-def main(argv=None):
-    pargs = docopt(__doc__, argv, version=masterfile.__package_version__)
-    if pargs['--verbose']:
+def main(args):
+    if args.verbose:
         logger.setLevel(logging.DEBUG)
-    logger.debug(pargs)
-    output = pargs['<outfile>']
+    logger.debug(args)
+    output = args.out_file
     if output == '-':
-        logger.info("sgtdout")
+        logger.info("stdout")
         output = sys.stdout
     make_joined_data(pargs['<masterfile_path>'], output)
 

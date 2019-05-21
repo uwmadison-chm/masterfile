@@ -9,8 +9,6 @@
 
 """Validate masterfile data, dictionaries, and exclusion files.
 
-Usage: validate_masterfile [options] <masterfile_path> [<file>...]
-
 Looks through a masterfile directory and loads all data, dictionary, and
 exclusion files. Prints a list of warnings and errors for missing data,
 ordered by file. Where appropriate, line and column identifiers are also
@@ -19,9 +17,6 @@ printed.
 If extra files following the masterfile path are given, this program will
 check those files' formats in addition to the ones in the masterfile. This
 lets you validate files before incorporating them into your data.
-
-Options:
-  -v, --verbose         Display debugging output
 """
 
 from __future__ import absolute_import, unicode_literals
@@ -29,7 +24,6 @@ from __future__ import absolute_import, unicode_literals
 import masterfile
 from masterfile.masterfile import Masterfile
 from masterfile import validator
-from masterfile.vendor.docopt import docopt
 
 import sys
 import logging
@@ -42,15 +36,14 @@ CLEAN = 0
 ERRORS = 1
 
 
-def main(argv=None):
-    pargs = docopt(__doc__, argv, version=masterfile.__package_version__)
-    if pargs['--verbose']:
+def main(args):
+    if args.verbose:
         logger.setLevel(logging.DEBUG)
-    logger.debug(pargs)
+    logger.debug(args)
     mf = Masterfile.find_settings_file_and_construct(
-        pargs['<masterfile_path>'])
+        args.masterfile)
     mf._find_candidate_data_files()
-    mf._candidate_data_files.extend(pargs['<file>'])
+    mf._candidate_data_files.extend(args.file)
     mf._read_unprocessed_data_files()
     mf._process_dataframes()
     mf._load_dictionary()

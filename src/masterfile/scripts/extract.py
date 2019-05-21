@@ -9,8 +9,6 @@
 
 """ Extract masterfile-formatted data from a CSV file.
 
-Usage: extract_masterfile_data [options] <masterfile_path> <data> <outfile>
-
 Takes a CSV file with a mix of data destined for a masterfile and other data,
 and extracts and formats the data to masterfile format, writing the result
 to stdout.
@@ -22,11 +20,6 @@ parts of settings.json's "components" entry.
 If there's a "comments" or "description" row in your data, you can skip it
 with the --skip option. Additionally, rows with blank index_column will
 always be skipped, since they don't make any sense in the masterfile data.
-
-Options:
-  --index_column=<col>  Use <col> as the input's index column
-  --skip=<rows>         Skip <rows> data columns [default: 0]
-  -v, --verbose         Display debugging output
 """
 
 from __future__ import absolute_import, unicode_literals
@@ -40,23 +33,21 @@ import pandas as pd
 
 import masterfile
 from masterfile.masterfile import Masterfile
-from masterfile.vendor.docopt import docopt
 
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def main(argv=None):
-    pargs = docopt(__doc__, argv, version=masterfile.__package_version__)
-    if pargs['--verbose']:
+def main(args):
+    if args.verbose:
         logger.setLevel(logging.DEBUG)
-    logger.debug(pargs)
-    df = pd.read_csv(pargs['<data>'], dtype=str)
-    mf = Masterfile.load_path(pargs['<masterfile_path>'])
+    logger.debug(args)
+    df = pd.read_csv(args.csv_file, dtype=str)
+    mf = Masterfile.load_path(args.masterfile_path)
     formatted = format_dataframe_for_masterfile(
-        df, mf, pargs['--index_column'], int(pargs['--skip']))
-    with file_or_stdout(pargs['<outfile>']) as output:
+        df, mf, args.index_column, args.skip)
+    with file_or_stdout(args.out_file) as output:
         formatted.to_csv(output, line_terminator='\r\n')
 
 

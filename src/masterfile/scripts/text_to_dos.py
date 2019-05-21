@@ -9,8 +9,6 @@
 
 """ Changes line endings (\r, \n, \r\n) to DOS-style (\r\n). Writes to stdout.
 
-Usage: text_to_dos <input_file>
-
 Note: Also strips the UTF-8 signature (\xEF\xBB\xBF) from the start of files.
 """
 
