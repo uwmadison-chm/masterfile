@@ -2,6 +2,28 @@
 
 ## Tools to organize, access, and catalog the variables of interest in a scientific study
 
+## Command line usage
+
+`masterfile --help` will list all the subcommands. 
+
+### Create
+
+    masterfile create masterfile_path out_file
+
+### Join
+
+    masterfile join masterfile_path out_file
+
+### Extract
+
+    masterfile extract [-s|--skip ROWS] [--index_column COL]
+                          masterfile_path csv_file out_file
+
+### Validate
+
+    asterfile validate masterfile_path [file [file ...]]
+
+
 ## Draft API usage example
 
 ```python
@@ -64,12 +86,10 @@ Here are some (all?) of the things to do to verify you have semantically reasona
 
 ## Credits
 
-Written by Nate Vack <njvack@wisc.edu>
+Written by Nate Vack <njvack@wisc.edu> with help from Dan Fitch <dfitch@wisc.edu>
 
-masterfile packages some wonderful tools: [docopt](https://github.com/docopt/docopt), [schema](https://github.com/halst/schema), and [attrs](https://github.com/python-attrs/attrs).
-
-docopt is copyright (c) 2013 Vladimir Keleshev, vladimir@keleshev.com
+masterfile packages some wonderful tools: [schema](https://github.com/halst/schema) and [attrs](https://github.com/python-attrs/attrs).
 
 schema is copyright (c) 2012 Vladimir Keleshev, vladimir@keleshev.com
 
-attrs is copyright(c) 2015 Hynek Schlawack
+attrs is copyright (c) 2015 Hynek Schlawack
