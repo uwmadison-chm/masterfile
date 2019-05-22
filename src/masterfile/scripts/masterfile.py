@@ -53,7 +53,7 @@ def make_parser():
 
 
 def main(argv=None):
-    parser = make_parser
+    parser = make_parser()
     args = parser.parse_args()
 
     if args.subcommand == "extract":

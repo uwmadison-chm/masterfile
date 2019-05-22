@@ -13,37 +13,31 @@ import pytest
 from os import path
 import glob
 
-from masterfile.scripts import validate_masterfile
+from masterfile.scripts import validate
+from masterfile.scripts import masterfile as mf
 
 
 class TestValidateMasterfile(object):
 
     def test_raises_on_empty_params(self):
         with pytest.raises(SystemExit):
-            validate_masterfile.main([])
-
-    def test_shows_help(self, capsys):
-        with pytest.raises(SystemExit):
-            validate_masterfile.main(['-h'])
-        out, err = capsys.readouterr()
-        assert out.startswith('Validate')
-        assert err == ''
+            mf.main([])
 
     def test_retval_zero_for_good_dir(self, good_path, capsys):
-        retval = validate_masterfile.main([good_path])
+        retval = mf.main(['validate', good_path])
         out, err = capsys.readouterr()
         assert out.startswith('No problems found')
         assert err == ''
         assert retval == 0
 
     def test_retval_nonzero_for_bad_dir(self, example_path, capsys):
-        retval = validate_masterfile.main([example_path])
+        retval = mf.main(['validate', example_path])
         out, _err = capsys.readouterr()
         assert not retval == 0
         assert len(out) > 0
 
     def test_retval_nonzero_for_problems_dir(self, problems_path, capsys):
-        retval = validate_masterfile.main([problems_path])
+        retval = mf.main(['validate', problems_path])
         out, _err = capsys.readouterr()
         assert not retval == 0
         assert len(out) > 0
@@ -52,7 +46,7 @@ class TestValidateMasterfile(object):
     def test_retval_nonzero_for_good_with_problem_files(
             self, good_path, problems_path, capsys):
         problem_file = glob.glob(path.join(problems_path, '*csv'))[0]
-        retval = validate_masterfile.main([good_path, problem_file])
+        retval = mf.main(['validate', good_path, problem_file])
         out, _err = capsys.readouterr()
         assert not retval == 0
         assert len(out) > 0

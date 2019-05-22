@@ -11,22 +11,17 @@ from os import path
 
 import pytest
 
-from masterfile.scripts import make_blank_dictionary
+from masterfile.scripts import create
 
 
 class TestMakeBlankDictionary(object):
-
-    def test_raises_on_empty_params(self):
-        with pytest.raises(SystemExit):
-            make_blank_dictionary.main([])
-
     def test_prints_output_on_success_stdout(self, good_path, capsys):
-        make_blank_dictionary.main([good_path, '-'])
+        create.main([good_path, '-'])
         out, err = capsys.readouterr()
         assert len(out) > 0
 
     def test_prints_output_on_success_outfile(self, good_path, tmpdir):
         outfile = str(tmpdir.join('dict.csv'))
-        make_blank_dictionary.main([good_path, outfile])
+        create.main([good_path, outfile])
         assert path.exists(str(outfile))
         assert path.getsize(str(outfile)) > 0

@@ -11,7 +11,8 @@ import pytest
 import pandas as pd
 from os import path
 
-from masterfile.scripts import extract_masterfile_data
+from masterfile.scripts import extract
+from masterfile.scripts import masterfile as mf
 from masterfile.masterfile import Masterfile
 
 from .. import conftest
@@ -25,36 +26,33 @@ class TestExtractMasterfileData(object):
     def df(self):
         return pd.read_csv(INPUT_FILE, dtype=str, na_filter=False)
 
-    def test_raises_on_empty_params(self):
-        with pytest.raises(SystemExit):
-            extract_masterfile_data.main([])
-
     def test_skip_rows_excludes_blanks(self, df):
-        df2 = extract_masterfile_data._filter_rows(df, 'id_number', 0)
+        df2 = extract._filter_rows(df, 'id_number', 0)
         assert len(df2) == (len(df) - 1)
 
     def test_skip_rows_skips(self, df):
-        df2 = extract_masterfile_data._filter_rows(df, 'id_number', 1)
+        df2 = extract._filter_rows(df, 'id_number', 1)
         assert len(df2) == (len(df) - 2)
 
     def test_sets_index_column(self, df, good_mf):
-        df2 = extract_masterfile_data.format_dataframe_for_masterfile(
+        df2 = extract.format_dataframe_for_masterfile(
             df, good_mf, 'id_number', 1)
         assert df2.index.name == good_mf.index_column
 
     def test_filters_rows(self, df, good_mf):
-        df2 = extract_masterfile_data.format_dataframe_for_masterfile(
+        df2 = extract.format_dataframe_for_masterfile(
             df, good_mf, 'id_number', 1)
         assert len(df2) == (len(df) - 2)
 
     def test_filters_columns(self, df, good_mf):
-        df2 = extract_masterfile_data.format_dataframe_for_masterfile(
+        df2 = extract.format_dataframe_for_masterfile(
             df, good_mf, 'id_number', 1)
         assert len(df2.columns) == (len(df.columns) - 3)
 
     def test_roundtrip_file(self, good_path, tmpdir):
         outfile = str(tmpdir.join('output.csv'))
-        extract_masterfile_data.main([
+        mf.main([
+            'extract',
             '--index_column=id_number',
             '--skip=1',
             good_path,
@@ -68,7 +66,8 @@ class TestExtractMasterfileData(object):
         assert columns[0] == 'ppt_id'
 
     def test_roundtrip_stdout(self, good_path, capsys):
-        extract_masterfile_data.main([
+        mf.main([
+            'extract',
             '--index_column=id_number',
             '--skip=1',
             good_path,
