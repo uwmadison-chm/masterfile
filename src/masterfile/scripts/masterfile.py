@@ -17,12 +17,16 @@ from __future__ import absolute_import, unicode_literals
 
 import argparse
 
-def main(argv=None):
+def make_parser():
     parser = argparse.ArgumentParser(prog='masterfile')
     parser.add_argument('-v', '--verbose', help='Display debugging output', action="store_true")
     subparsers = parser.add_subparsers(dest="subcommand")
 
     create = subparsers.add_parser('create', help='Create blank dictionary')
+    create.add_argument('masterfile_path', help="Path to the masterfile to use")
+    create.add_argument('out_file', help="Path to the output file or - for STDOUT")
+
+    create = subparsers.add_parser('create', help='Create pretty dictionary, reformatting to contain every masterfile column. This is useful for feeding into Excel and browsing or searching around.')
     create.add_argument('masterfile_path', help="Path to the masterfile to use")
     create.add_argument('out_file', help="Path to the output file or - for STDOUT")
 
@@ -45,6 +49,11 @@ def main(argv=None):
             r'Changes line endings (\r, \n, \r\n) to DOS-style (\r\n). ' +
             r'Note: Also strips the UTF-8 signature (\xEF\xBB\xBF) from the start of files.')
 
+    return parser
+
+
+def main(argv=None):
+    parser = make_parser
     args = parser.parse_args()
 
     if args.subcommand == "extract":
@@ -53,6 +62,9 @@ def main(argv=None):
     elif args.subcommand == "create":
         import create
         create.main(args)
+    elif args.subcommand == "pretty":
+        import pretty
+        pretty.main(args)
     elif args.subcommand == "join":
         import join
         join.main(args)

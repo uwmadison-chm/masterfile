@@ -53,3 +53,8 @@ class TestValidator(object):
             self, full_problems_mf):
         ers = validator.run_all_validators(full_problems_mf)
         assert instance_filter(ers, errors.ComponentNotInDictionaryError)
+
+    def test_problems_path_has_dictionary_index_error(
+            self, full_problems_mf):
+        ers = validator.run_all_validators(full_problems_mf)
+        assert instance_filter(ers, errors.DictionaryIndexNotFoundError)

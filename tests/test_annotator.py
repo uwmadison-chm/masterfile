@@ -7,8 +7,6 @@
 # at the University of Wisconsin-Madison.
 # Released under MIT licence; see LICENSE at the package root.
 
-from masterfile import annotator
-
 
 class TestAnnotator(object):
 
@@ -34,3 +32,9 @@ class TestAnnotator(object):
         good_annotator.annotate_masterfile()
         mf = good_annotator.masterfile
         assert mf.df.sr_t1_foo_var1.contact['measure_foo'] == 'Jordan'
+
+    def test_annotation_sets_metadata(self, good_annotator):
+        good_annotator.annotate_masterfile()
+        df = good_annotator.masterfile.dataframe
+        ddict = good_annotator.dictionary
+        assert list(df._metadata) == list(ddict.columns)

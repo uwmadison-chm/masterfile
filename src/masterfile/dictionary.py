@@ -46,6 +46,10 @@ import pandas as pd
 from . import errors
 from .vendor import attr
 
+import logging
+logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 INDEX_COLS = ['component', 'short_name']
 
@@ -75,15 +79,25 @@ class Dictionary(object):
     def dataframe(self):
         if self._dataframe is not None:
             return self._dataframe
-        self._dataframe = pd.concat(self._loaded_dataframes)
+        if len(self._loaded_dataframes) > 0:
+            self._dataframe = pd.concat(self._loaded_dataframes)
+        else:
+            self._dataframe = pd.DataFrame()
         return self._dataframe
 
     @property
     def df(self):
         return self.dataframe
 
+    @property
+    def columns(self):
+        return self.dataframe.columns
+
     @classmethod
     def load_for_masterfile(klass, mf):
+        if mf.root_path is None:
+            logger.debug("Trying to load a dictionary with no root_path")
+            return None
         dictionary_path = path.join(mf.root_path, 'dictionary')
         d = klass(mf, mf.components, dictionary_path)
         d._find_candidate_files()
@@ -114,6 +128,8 @@ class Dictionary(object):
 
     def _find_candidate_files(self):
         self._candidate_files = glob(path.join(self.dictionary_path, '*csv'))
+        logger.debug(
+            'found dictionary files: {}'.format(self._candidate_files))
 
     def _read_unprocessed_dataframes(self):
         from masterfile import masterfile
@@ -134,10 +150,12 @@ class Dictionary(object):
         for f, udf in zip(self._candidate_files, self._unprocessed_dataframes):
             try:
                 df = udf.set_index(INDEX_COLS)
+                df.sort_index(level=INDEX_COLS, inplace=True)
                 self._loaded_dataframes.append(df)
                 self._loaded_files.append(f)
             except LookupError as e:
-                self.error_list.append(errors.IndexNotFoundError(
+                logger.debug("can't find dicationary index in {}".format(f))
+                self.error_list.append(errors.DictionaryIndexNotFoundError(
                     locations=[f],
                     message='unable to find dictionary index {}'.format(
                         INDEX_COLS),

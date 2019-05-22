@@ -6,4 +6,5 @@ from . import (  # noqa: F401
     duplicate_column,
     column_format,
     components_in_dictionary,
+    dictionary_format,
 )

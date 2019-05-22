@@ -65,6 +65,14 @@ class MissingIndexValueError(IndexError):
     code = 'E203'
 
 
+class DictionaryError(Error):
+    code = 'E3'
+
+
+class DictionaryIndexNotFoundError(DictionaryError):
+    code = 'E301'
+
+
 class SettingsError(Error):
     code = 'E8'
 

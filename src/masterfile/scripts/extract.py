@@ -43,7 +43,7 @@ def main(args):
     if args.verbose:
         logger.setLevel(logging.DEBUG)
     logger.debug(args)
-    df = pd.read_csv(args.csv_file, dtype=str)
+    df = pd.read_csv(args.csv_file, dtype=str, na_filter=False)
     mf = Masterfile.load_path(args.masterfile_path)
     formatted = format_dataframe_for_masterfile(
         df, mf, args.index_column, args.skip)
