@@ -6,4 +6,4 @@ from ._metadata import version as __version__, author as __author__, email as __
 
 __package_version__ = 'masterfile {}'.format(__version__)
 
-from .masterfile import load
+from .masterfile import load  # noqa: F401

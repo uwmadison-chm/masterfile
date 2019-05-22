@@ -23,7 +23,7 @@ logger.setLevel(logging.INFO)
 def validate(mf):
     logger.debug("validators.column_format:validate()")
     if mf.components is None:
-        logger.debug("no components for this masterfile!")
+        logger.debug("no components for this masterfile")
         return []
     ers = _misformatted_column_errors(mf)
     logger.debug("validators.column_format found {} errors".format(len(ers)))

@@ -38,7 +38,7 @@ def _mf_components_not_in_dictionary(mf):
                 logger.debug('looking for {} {}'.format(component, value))
                 if (component, value) not in mf.dictionary:
                     errs.append(errors.ComponentNotInDictionaryError(
-                        message='{} {} not found in dictionary!'.format(
+                        message='{} {} not found in dictionary'.format(
                             component, value),
                         locations=[errors.Location.smart_create(
                             filename=f,

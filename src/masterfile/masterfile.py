@@ -211,8 +211,10 @@ def read_csv_no_alterations(csv_file):
     the CSV by some other mechanism.
     We're also setting dtype=str so pandas doesn't go converting and possibly
     mangling things that look like numbers and/or dates.
+    We also need na_filter=False or it'll gamely go and filter out NaNs
+    as well. Sigh.
     """
-    df = pd.read_csv(csv_file, dtype=str, header=None)
+    df = pd.read_csv(csv_file, dtype=str, header=None, na_filter=False)
     df = df.rename(
         columns=df.iloc[0], copy=False).iloc[1:].reset_index(drop=True)
     return df

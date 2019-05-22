@@ -52,7 +52,7 @@ def main(argv=None):
     if pargs['--verbose']:
         logger.setLevel(logging.DEBUG)
     logger.debug(pargs)
-    df = pd.read_csv(pargs['<data>'], dtype=str)
+    df = pd.read_csv(pargs['<data>'], dtype=str, na_filter=False)
     mf = Masterfile.load_path(pargs['<masterfile_path>'])
     formatted = format_dataframe_for_masterfile(
         df, mf, pargs['--index_column'], int(pargs['--skip']))
