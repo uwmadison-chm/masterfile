@@ -154,7 +154,7 @@ class Dictionary(object):
                 self._loaded_dataframes.append(df)
                 self._loaded_files.append(f)
             except LookupError as e:
-                logger.debug("can't find dicationary index in {}".format(f))
+                logger.debug("can't find dictionary index in {}".format(f))
                 self.error_list.append(errors.DictionaryIndexNotFoundError(
                     locations=[f],
                     message='unable to find dictionary index {}'.format(

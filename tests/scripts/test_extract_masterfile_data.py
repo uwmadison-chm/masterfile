@@ -17,15 +17,16 @@ from masterfile.masterfile import Masterfile
 
 from .. import conftest
 
+@pytest.fixture
+def df(self, input_file):
+    return pd.read_csv(input_file, dtype=str, na_filter=False)
+
+@pytest.fixture
+def input_file(self, example_path):
+    return path.join(example_path, 'foo_input.csv')
+
+
 class TestExtractMasterfileData(object):
-    @pytest.fixture
-    def df(self, input_file):
-        return pd.read_csv(input_file, dtype=str, na_filter=False)
-
-    @pytest.fixture
-    def input_file(self, example_path):
-        return path.join(example_path, 'foo_input.csv')
-
     def test_skip_rows_excludes_blanks(self, df):
         df2 = extract._filter_rows(df, 'id_number', 0)
         assert len(df2) == (len(df) - 1)
@@ -65,7 +66,7 @@ class TestExtractMasterfileData(object):
         columns = lines[0].split(',')
         assert columns[0] == 'ppt_id'
 
-    def test_roundtrip_stdout(self, good_path, capsys):
+    def test_roundtrip_stdout(self, input_file, good_path, capsys):
         mf.main([
             'extract',
             '--index_column=id_number',

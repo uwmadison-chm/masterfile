@@ -26,9 +26,9 @@ def make_parser():
     create.add_argument('masterfile_path', help="Path to the masterfile to use")
     create.add_argument('out_file', help="Path to the output file or - for STDOUT")
 
-    create = subparsers.add_parser('create', help='Create pretty dictionary, reformatting to contain every masterfile column. This is useful for feeding into Excel and browsing or searching around.')
-    create.add_argument('masterfile_path', help="Path to the masterfile to use")
-    create.add_argument('out_file', help="Path to the output file or - for STDOUT")
+    pretty = subparsers.add_parser('pretty', help='Create pretty dictionary, reformatting to contain every masterfile column. This is useful for feeding into Excel and browsing or searching around.')
+    pretty.add_argument('masterfile_path', help="Path to the masterfile to use")
+    pretty.add_argument('out_file', help="Path to the output file or - for STDOUT")
 
     join = subparsers.add_parser('join', help='Make joined data')
     join.add_argument('masterfile_path', help="Path to the masterfile to use")

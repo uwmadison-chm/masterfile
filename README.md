@@ -86,8 +86,23 @@ Here are some (all?) of the things to do to verify you have semantically reasona
 
 ## Getting started for development
 
+Create a virtualenv:
+
+    virtualenv ~/env/masterfile
+    source ~/env/masterfile/bin/activate
+
+Install the requirements and this module for development:
+
+    pip install -r requirements_dev.txt 
     pip install -e .
+
+Run tests:
+
     pytest
+
+Run tests across all supported Python versions:
+
+    tox
 
 To run in a specific python version:
 

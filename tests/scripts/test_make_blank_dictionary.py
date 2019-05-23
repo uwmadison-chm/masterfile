@@ -12,16 +12,16 @@ from os import path
 import pytest
 
 from masterfile.scripts import create
-
+from masterfile.scripts import masterfile as mf
 
 class TestMakeBlankDictionary(object):
     def test_prints_output_on_success_stdout(self, good_path, capsys):
-        create.main([good_path, '-'])
+        mf.main(['create', good_path, '-'])
         out, err = capsys.readouterr()
         assert len(out) > 0
 
     def test_prints_output_on_success_outfile(self, good_path, tmpdir):
         outfile = str(tmpdir.join('dict.csv'))
-        create.main([good_path, outfile])
+        mf.main(['create', good_path, outfile])
         assert path.exists(str(outfile))
         assert path.getsize(str(outfile)) > 0

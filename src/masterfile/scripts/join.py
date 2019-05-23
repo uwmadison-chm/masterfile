@@ -38,7 +38,7 @@ def main(args):
     if output == '-':
         logger.info("stdout")
         output = sys.stdout
-    make_joined_data(pargs['<masterfile_path>'], output)
+    make_joined_data(args.masterfile_path, output)
 
 
 if __name__ == '__main__':

@@ -78,7 +78,8 @@ class Masterfile(object):
         self.__joined_data = pd.concat(
             self._dataframes,
             axis='columns',
-            join='outer')
+            join='outer',
+            sort=True)
         self.__joined_data.index.name = self.index_column
         return self.__joined_data
 
