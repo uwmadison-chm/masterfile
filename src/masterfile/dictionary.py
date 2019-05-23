@@ -80,7 +80,7 @@ class Dictionary(object):
         if self._dataframe is not None:
             return self._dataframe
         if len(self._loaded_dataframes) > 0:
-            self._dataframe = pd.concat(self._loaded_dataframes)
+            self._dataframe = pd.concat(self._loaded_dataframes, sort=True)
         else:
             self._dataframe = pd.DataFrame()
         return self._dataframe

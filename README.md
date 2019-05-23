@@ -84,6 +84,15 @@ Here are some (all?) of the things to do to verify you have semantically reasona
 * Duplicate columns
 * Column names not matching format
 
+## Getting started for development
+
+    pip install -e .
+    pytest
+
+To run in a specific python version:
+
+    tox -e py37
+
 ## Credits
 
 Written by Nate Vack <njvack@wisc.edu> with help from Dan Fitch <dfitch@wisc.edu>

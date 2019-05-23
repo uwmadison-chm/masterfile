@@ -27,7 +27,6 @@ from itertools import chain
 import pandas
 
 import masterfile
-from masterfile.vendor.docopt import docopt
 
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')

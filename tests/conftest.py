@@ -26,50 +26,50 @@ def example_path():
 
 
 @pytest.fixture()
-def good_path():
-    return path.join(example_path(), 'good')
+def good_path(example_path):
+    return path.join(example_path, 'good')
 
 
 @pytest.fixture()
-def good_csvs():
-    return glob(path.join(good_path(), '*csv'))
+def good_csvs(good_path):
+    return glob(path.join(good_path, '*csv'))
 
 
 @pytest.fixture()
-def problems_path():
-    return path.join(example_path(), 'problems')
+def problems_path(example_path):
+    return path.join(example_path, 'problems')
 
 
 @pytest.fixture()
-def good_mf():
-    return masterfile.masterfile.Masterfile.load_path(good_path())
+def good_mf(good_path):
+    return masterfile.masterfile.Masterfile.load_path(good_path)
 
 
 @pytest.fixture()
-def full_good_mf():
-    return masterfile.load(good_path())
+def full_good_mf(good_path):
+    return masterfile.load(good_path)
 
 
 @pytest.fixture()
-def good_dict():
-    return masterfile.dictionary.Dictionary.load_for_masterfile(good_mf())
+def good_dict(good_mf):
+    return masterfile.dictionary.Dictionary.load_for_masterfile(good_mf)
 
 
 @pytest.fixture()
-def good_annotator():
-    return masterfile.annotator.Annotator(good_mf(), good_dict())
+def good_annotator(good_mf, good_dict):
+    return masterfile.annotator.Annotator(good_mf, good_dict)
 
 
 @pytest.fixture()
-def nosettings_mf():
-    return masterfile.masterfile.Masterfile.load_path(example_path())
+def nosettings_mf(example_path):
+    return masterfile.masterfile.Masterfile.load_path(example_path)
 
 
 @pytest.fixture()
-def problems_mf():
-    return masterfile.masterfile.Masterfile.load_path(problems_path())
+def problems_mf(problems_path):
+    return masterfile.masterfile.Masterfile.load_path(problems_path)
 
 
 @pytest.fixture()
-def full_problems_mf():
-    return masterfile.load(problems_path())
+def full_problems_mf(problems_path):
+    return masterfile.load(problems_path)

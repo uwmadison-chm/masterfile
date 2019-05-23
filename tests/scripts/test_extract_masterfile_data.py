@@ -17,14 +17,14 @@ from masterfile.masterfile import Masterfile
 
 from .. import conftest
 
-INPUT_FILE = path.join(conftest.example_path(), 'foo_input.csv')
-
-
 class TestExtractMasterfileData(object):
+    @pytest.fixture
+    def df(self, input_file):
+        return pd.read_csv(input_file, dtype=str, na_filter=False)
 
     @pytest.fixture
-    def df(self):
-        return pd.read_csv(INPUT_FILE, dtype=str, na_filter=False)
+    def input_file(self, example_path):
+        return path.join(example_path, 'foo_input.csv')
 
     def test_skip_rows_excludes_blanks(self, df):
         df2 = extract._filter_rows(df, 'id_number', 0)
@@ -49,14 +49,14 @@ class TestExtractMasterfileData(object):
             df, good_mf, 'id_number', 1)
         assert len(df2.columns) == (len(df.columns) - 3)
 
-    def test_roundtrip_file(self, good_path, tmpdir):
+    def test_roundtrip_file(self, input_file, good_path, tmpdir):
         outfile = str(tmpdir.join('output.csv'))
         mf.main([
             'extract',
             '--index_column=id_number',
             '--skip=1',
             good_path,
-            INPUT_FILE,
+            input_file,
             outfile])
         out = open(outfile).read()
         lines = out.split('\r\n')
@@ -71,7 +71,7 @@ class TestExtractMasterfileData(object):
             '--index_column=id_number',
             '--skip=1',
             good_path,
-            INPUT_FILE,
+            input_file,
             '-'])
         out, _err = capsys.readouterr()
         lines = out.split('\r\n')

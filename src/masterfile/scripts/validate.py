@@ -41,7 +41,7 @@ def main(args):
         logger.setLevel(logging.DEBUG)
     logger.debug(args)
     mf = Masterfile.find_settings_file_and_construct(
-        args.masterfile)
+        args.masterfile_path)
     mf._find_candidate_data_files()
     mf._candidate_data_files.extend(args.file)
     mf._read_unprocessed_data_files()

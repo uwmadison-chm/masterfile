@@ -54,26 +54,26 @@ def make_parser():
 
 def main(argv=None):
     parser = make_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.subcommand == "extract":
-        import extract
-        extract.main(args)
+        from masterfile.scripts import extract
+        return extract.main(args)
     elif args.subcommand == "create":
-        import create
-        create.main(args)
+        from masterfile.scripts import create
+        return create.main(args)
     elif args.subcommand == "pretty":
-        import pretty
-        pretty.main(args)
+        from masterfile.scripts import pretty
+        return pretty.main(args)
     elif args.subcommand == "join":
-        import join
-        join.main(args)
+        from masterfile.scripts import join
+        return join.main(args)
     elif args.subcommand == "validate":
-        import validate
-        validate.main(args)
+        from masterfile.scripts import validate
+        return validate.main(args)
     elif args.subcommand == "dos":
-        import text_to_dos
-        text_to_dos.main()
+        import masterfile.scripts.text_to_dos
+        return text_to_dos.main()
     else:
         parser.print_help()
 

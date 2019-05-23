@@ -21,7 +21,7 @@ logger.setLevel(logging.INFO)
 def validate(mf):
     logger.debug('validators.components_in_dictionary:validate()')
     if mf.dictionary is None:
-        logger.warn("dictionary is None, can't check")
+        logger.warning("dictionary is None, can't check")
         return []
     errs = _mf_components_not_in_dictionary(mf)
     logger.debug('found {} errors'.format(len(errs)))

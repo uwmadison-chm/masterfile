@@ -18,11 +18,6 @@ from masterfile.scripts import masterfile as mf
 
 
 class TestValidateMasterfile(object):
-
-    def test_raises_on_empty_params(self):
-        with pytest.raises(SystemExit):
-            mf.main([])
-
     def test_retval_zero_for_good_dir(self, good_path, capsys):
         retval = mf.main(['validate', good_path])
         out, err = capsys.readouterr()
