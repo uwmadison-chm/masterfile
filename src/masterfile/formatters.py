@@ -29,7 +29,7 @@ def column_number_to_column_id(number):
     "Z" to "AA" which is like going from 9 to 11 with no intervening 10.
     Only works for positive integers.
     """
-    if number <= 0 or not isinstance(number, int):
+    if not isinstance(number, int) or number <= 0:
         raise AttributeError(
             "column_number_to_column_id requires a non-negative int")
     digits = string.ascii_uppercase
