@@ -31,3 +31,7 @@ class TestIndexColumn(object):
         assert ers
         locs = ers[0].locations
         assert len(locs) == 2
+
+    def test_returns_error_with_duplicate_index_values(self, problems_mf):
+        ers = index_column._find_masterfile_duplicate_indexes(problems_mf)
+        assert ers

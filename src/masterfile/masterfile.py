@@ -19,6 +19,11 @@ from . import errors
 from . import dictionary
 from . import annotator
 
+import logging
+logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 
 def load(path):
     return Masterfile.load_and_annotate(path)
@@ -181,6 +186,16 @@ class Masterfile(object):
                 self._candidate_data_files, self._unprocessed_dataframes):
             try:
                 df = udf.set_index(self.index_column)
+                # Probably the best thing to do here is drop all rows that have
+                # a duplicate value in the index; we can't know which one is
+                # the "real" one.
+                dupe_index_mask = df.index.duplicated(keep=False)
+                dupe_count = dupe_index_mask.sum()
+                if dupe_index_mask.sum() > 0:
+                    logger.warning(
+                        f'{dupe_count} duplicate index values found in {f}!')
+                    logger.warning(f'Dropping all rows with duplicate values.')
+                df = df[~dupe_index_mask]
                 self._dataframes.append(df)
             except LookupError as e:
                 self.errors.append(errors.IndexNotFoundError(
