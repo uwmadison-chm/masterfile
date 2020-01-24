@@ -87,7 +87,7 @@ class Masterfile(object):
             self._dataframes,
             axis='columns',
             join='outer',
-            sort=True)
+            sort=False)
         self.__joined_data.index.name = self.index_column
         return self.__joined_data
 
@@ -196,7 +196,8 @@ class Masterfile(object):
                         f'{dupe_count} duplicate index values found in {f}!')
                     logger.warning(f'Dropping all rows with duplicate values.')
                 df = df[~dupe_index_mask]
-                self._dataframes.append(df)
+                sorted_df = df.sort_values(by=self.index_column, kind='mergesort')
+                self._dataframes.append(sorted_df)
             except LookupError as e:
                 self.errors.append(errors.IndexNotFoundError(
                     locations=[errors.Location(f)],
