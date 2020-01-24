@@ -15,8 +15,6 @@ from masterfile.scripts import extract
 from masterfile.scripts import masterfile as mf
 from masterfile.masterfile import LINE_ENDING
 
-from .. import conftest
-
 
 @pytest.fixture
 def df(input_file):

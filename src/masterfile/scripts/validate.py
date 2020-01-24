@@ -21,7 +21,6 @@ lets you validate files before incorporating them into your data.
 
 from __future__ import absolute_import, unicode_literals
 
-import masterfile
 from masterfile.masterfile import Masterfile
 from masterfile import validator
 

@@ -9,7 +9,6 @@
 
 from __future__ import absolute_import
 
-from masterfile import errors
 from masterfile.validators import components_in_dictionary
 
 import logging

@@ -21,8 +21,7 @@ import logging
 from collections import defaultdict
 from contextlib import contextmanager
 
-import masterfile
-from masterfile.masterfile import Masterfile  # Okay this is ridiculous
+from masterfile.masterfile import Masterfile
 
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 logger = logging.getLogger()

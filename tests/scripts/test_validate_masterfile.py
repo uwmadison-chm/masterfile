@@ -9,11 +9,9 @@
 
 from __future__ import absolute_import
 
-import pytest
 from os import path
 import glob
 
-from masterfile.scripts import validate
 from masterfile.scripts import masterfile as mf
 
 

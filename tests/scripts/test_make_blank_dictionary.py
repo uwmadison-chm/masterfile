@@ -9,10 +9,8 @@
 
 from os import path
 
-import pytest
-
-from masterfile.scripts import create
 from masterfile.scripts import masterfile as mf
+
 
 class TestMakeBlankDictionary(object):
     def test_prints_output_on_success_stdout(self, good_path, capsys):

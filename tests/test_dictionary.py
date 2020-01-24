@@ -9,7 +9,6 @@
 
 from os import path
 
-from masterfile import dictionary
 from masterfile.dictionary import Dictionary
 
 
