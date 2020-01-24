@@ -31,7 +31,7 @@ from contextlib import contextmanager
 
 import pandas as pd
 
-import masterfile
+from masterfile.masterfile import LINE_ENDING
 from masterfile.masterfile import Masterfile
 
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
@@ -40,6 +40,8 @@ logger.setLevel(logging.INFO)
 
 
 def main(args):
+    import os
+    os.linesep = "\r\n"
     if args.verbose:
         logger.setLevel(logging.DEBUG)
     logger.debug(args)
@@ -48,7 +50,7 @@ def main(args):
     formatted = format_dataframe_for_masterfile(
         df, mf, args.index_column, args.skip)
     with file_or_stdout(args.out_file) as output:
-        formatted.to_csv(output, line_terminator='\r\n')
+        formatted.to_csv(output, line_terminator=LINE_ENDING)
 
 
 @contextmanager
@@ -57,7 +59,7 @@ def file_or_stdout(filename):
         logger.info('Writing to stdout')
         yield sys.stdout
     else:
-        with open(filename, 'w') as f:
+        with open(filename, 'w', newline=LINE_ENDING) as f:
             logger.info('Writing to {}'.format(filename))
             yield f
 
@@ -103,7 +105,7 @@ def component_col_regex(component_count):
     """
     Match things like 'foo_bar_baz_corge'
     """
-    return '_'.join((['[^_\s]+'] * component_count))
+    return '_'.join(([r'[^_\s]+'] * component_count))
 
 
 if __name__ == '__main__':

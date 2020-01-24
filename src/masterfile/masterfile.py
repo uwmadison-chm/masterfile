@@ -24,6 +24,9 @@ def load(path):
     return Masterfile.load_and_annotate(path)
 
 
+LINE_ENDING = "\r\n"
+
+
 @attr.s
 class Masterfile(object):
 

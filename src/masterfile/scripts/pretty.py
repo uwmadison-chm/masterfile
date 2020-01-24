@@ -27,6 +27,7 @@ from itertools import chain
 import pandas
 
 import masterfile
+from masterfile.masterfile import LINE_ENDING
 
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
@@ -78,7 +79,7 @@ def write_pretty_dictionary(mf_path, output):
     pretty_df.sort_index(inplace=True)
     populate_pretty_df(pretty_df, mf)
     reindexed = pretty_df.reindex(index=original_index)
-    reindexed.to_csv(output)
+    reindexed.to_csv(output, line_terminator=LINE_ENDING)
     return 0
 
 

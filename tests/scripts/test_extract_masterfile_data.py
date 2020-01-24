@@ -13,16 +13,18 @@ from os import path
 
 from masterfile.scripts import extract
 from masterfile.scripts import masterfile as mf
-from masterfile.masterfile import Masterfile
+from masterfile.masterfile import LINE_ENDING
 
 from .. import conftest
 
-@pytest.fixture
-def df(self, input_file):
-    return pd.read_csv(input_file, dtype=str, na_filter=False)
 
 @pytest.fixture
-def input_file(self, example_path):
+def df(input_file):
+    return pd.read_csv(input_file, dtype=str, na_filter=False)
+
+
+@pytest.fixture
+def input_file(example_path):
     return path.join(example_path, 'foo_input.csv')
 
 
@@ -59,10 +61,10 @@ class TestExtractMasterfileData(object):
             good_path,
             input_file,
             outfile])
-        out = open(outfile).read()
-        lines = out.split('\r\n')
+        out = open(outfile, newline=LINE_ENDING).read()
+        lines = out.split(LINE_ENDING)
         assert len(lines) == 11
-        assert lines[-1] == ''
+        assert lines[-1].strip() == ''
         columns = lines[0].split(',')
         assert columns[0] == 'ppt_id'
 

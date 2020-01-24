@@ -18,6 +18,7 @@ from __future__ import absolute_import, unicode_literals
 import sys
 
 import masterfile
+from masterfile.masterfile import LINE_ENDING
 
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
@@ -27,7 +28,7 @@ logger.setLevel(logging.INFO)
 
 def make_joined_data(masterfile_path, output_file):
     mf = masterfile.load(masterfile_path)
-    mf.dataframe.to_csv(output_file, line_terminator='\r\n')
+    mf.dataframe.to_csv(output_file, line_terminator=LINE_ENDING)
 
 
 def main(args):
