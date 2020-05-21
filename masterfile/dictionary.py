@@ -44,7 +44,7 @@ from glob import glob
 import pandas as pd
 
 from . import errors
-from .vendor import attr
+import attr
 
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')

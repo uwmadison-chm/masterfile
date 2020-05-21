@@ -2,57 +2,25 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
-import os
+import sys
+from os import path
+
+SETUP_REQUIRES = ['setuptools >= 30.3.0']
+SETUP_REQUIRES += ['wheel'] if 'bdist_wheel' in sys.argv else []
 
 
 def get_locals(filename):
     l = {}
-    with open(filename, 'r') as f:
-        code = compile(f.read(), filename, 'exec')
-        exec(code, {}, l)
+    exec(open(filename, 'r').read(), {}, l)
     return l
 
 
-metadata = get_locals(os.path.join('src', 'masterfile', '_metadata.py'))
-
-
-requirements = [
-]
-
-test_requirements = [
-    # TODO: put package test requirements here
-]
+metadata = get_locals(path.join('masterfile', '_metadata.py'))
 
 setup(
-    name='masterfile',
+    name="masterfile",
+    setup_requires=SETUP_REQUIRES,
     version=metadata['version'],
-    description='Tools for organizing the variables of interest in a study',
-    author='Nate Vack',
-    author_email='njvack@wisc.edu',
-    url='https://github.com/uwmadison-chm/masterfile',
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
-    include_package_data=True,
-    install_requires=requirements,
-    license='MIT license',
-    zip_safe=False,
-    keywords='masterfile',
-    entry_points={'console_scripts': [
-            'masterfile = masterfile.scripts.masterfile:main',
-    ]},
-    classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-    ],
-    test_suite='tests',
-    tests_require=test_requirements
+    packages=find_packages(),
+    keywords="science research physiological biopac convert library",
 )

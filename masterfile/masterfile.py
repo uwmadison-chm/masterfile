@@ -14,7 +14,7 @@ from glob import glob
 
 import pandas as pd
 
-from .vendor import attr
+import attr
 from . import errors
 from . import dictionary
 from . import annotator

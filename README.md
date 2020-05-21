@@ -1,10 +1,10 @@
 # masterfile
 
-## Tools to organize, access, and catalog the variables of interest in a scientific study
+## Tools to organize, document, and validate the variables of interest in scientific studies
 
 ## Command line usage
 
-`masterfile --help` will list all the subcommands. 
+`masterfile --help` will list all the subcommands.
 
 ### Create
 
@@ -93,7 +93,7 @@ Create a virtualenv:
 
 Install the requirements and this module for development:
 
-    pip install -r requirements_dev.txt 
+    pip install -r requirements_dev.txt
     pip install -e .
 
 Run tests:

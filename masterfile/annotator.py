@@ -24,7 +24,7 @@ from __future__ import absolute_import, unicode_literals
 
 from collections import defaultdict
 
-from masterfile.vendor import attr
+import attr
 
 
 def annotate_masterfile(mf):
