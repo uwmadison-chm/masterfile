@@ -193,8 +193,11 @@ class Masterfile(object):
                 dupe_count = dupe_index_mask.sum()
                 if dupe_index_mask.sum() > 0:
                     logger.warning(
-                        f'{dupe_count} duplicate index values found in {f}!')
-                    logger.warning(f'Dropping all rows with duplicate values.')
+                        '{} duplicate index values found in {}'.format(
+                            dupe_count, f)
+                    )
+                    logger.warning(
+                        'Dropping all rows with duplicate values.')
                 df = df[~dupe_index_mask]
                 sorted_df = df.sort_values(by=self.index_column, kind='mergesort')
                 self._dataframes.append(sorted_df)
