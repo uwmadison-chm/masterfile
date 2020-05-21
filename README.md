@@ -1,6 +1,6 @@
 # masterfile
 
-[![DOI](https://zenodo.org/badge/970625.svg)](https://zenodo.org/badge/latestdoi/970625)
+[![DOI](https://zenodo.org/badge/100069618.svg)](https://zenodo.org/badge/latestdoi/100069618)
 
 ## Tools to organize, document, and validate the variables of interest in scientific studies
 
