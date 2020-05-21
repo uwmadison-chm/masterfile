@@ -22,5 +22,5 @@ setup(
     setup_requires=SETUP_REQUIRES,
     version=metadata['version'],
     packages=find_packages(),
-    keywords="science research physiological biopac convert library",
+    keywords="science research data library",
 )
