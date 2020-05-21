@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Part of the masterfile package: https://github.com/uwmadison-chm/masterfile
-# Copyright (c) 2018 Board of Regents of the University of Wisconsin System
+# Copyright (c) 2020 Board of Regents of the University of Wisconsin System
 # Written by Nate Vack <njvack@wisc.edu> at the Center for Healthy Minds
 # at the University of Wisconsin-Madison.
 # Released under MIT licence; see LICENSE at the package root.
@@ -49,8 +49,7 @@ def _map_column_locations(mf):
     for f, df in zip(mf._candidate_data_files, mf._unprocessed_dataframes):
         for col_index, col_name in enumerate(df.columns):
             column_locations[col_name].append(errors.Location.smart_create(
-                filename=f, column_index=col_index
-        ))
+                filename=f, column_index=col_index))
     return column_locations
 
 
