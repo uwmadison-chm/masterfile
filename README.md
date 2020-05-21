@@ -1,5 +1,7 @@
 # masterfile
 
+[![DOI](https://zenodo.org/badge/970625.svg)](https://zenodo.org/badge/latestdoi/970625)
+
 ## Tools to organize, document, and validate the variables of interest in scientific studies
 
 ## Command line usage
