@@ -59,7 +59,7 @@ def file_or_stdout(filename):
         logger.info('Writing to stdout')
         yield sys.stdout
     else:
-        with open(filename, 'w', newline=LINE_ENDING) as f:
+        with open(filename, 'w') as f:
             logger.info('Writing to {}'.format(filename))
             yield f
 
