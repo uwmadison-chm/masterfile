@@ -46,9 +46,13 @@ def main(args):
         logger.setLevel(logging.DEBUG)
     logger.debug(args)
     df = pd.read_csv(args.csv_file, dtype=str, na_filter=False)
-    mf = Masterfile.load_path(args.masterfile_path)
+    mf = Masterfile.find_settings_file_and_construct(args.masterfile_path)
+    extract_index_col = args.index_column
+    if extract_index_col is None or extract_index_col.strip() == "":
+        extract_index_col = mf.index_column
+
     formatted = format_dataframe_for_masterfile(
-        df, mf, args.index_column, args.skip)
+        df, mf, extract_index_col, args.skip)
     with file_or_stdout(args.out_file) as output:
         formatted.to_csv(output, line_terminator=LINE_ENDING)
 
