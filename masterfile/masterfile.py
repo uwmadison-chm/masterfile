@@ -8,9 +8,11 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from os import path
-import json
+from collections import defaultdict
 from glob import glob
+import json
+import math
+from os import path
 
 import pandas as pd
 
@@ -52,6 +54,9 @@ class Masterfile(object):
     # things we can't avoid finding while loading the data.
     errors = attr.ib(default=attr.Factory(list))
 
+    # A list of orderings for each component
+    orderings = attr.ib(default=attr.Factory(dict))
+
     # A structure with documentation on all components of masterfile
     # data columns.
     dictionary = attr.ib(default=None, repr=False)
@@ -81,19 +86,21 @@ class Masterfile(object):
 
     @property
     def dataframe(self):
-        if self.__joined_data is not None:
-            return self.__joined_data
-        self.__joined_data = pd.concat(
-            self._dataframes,
-            axis='columns',
-            join='outer',
-            sort=False)
-        self.__joined_data.index.name = self.index_column
+        if self.__joined_data is None:
+            self.__joined_data = self._build_joined_data()
         return self.__joined_data
 
     @property
     def df(self):
         return self.dataframe
+
+    @property
+    def ordering_list(self):
+        orderings = [
+            self.orderings.get(component, [])
+            for component in self.components
+        ]
+        return orderings
 
     @classmethod
     def load_path(klass, root_path):
@@ -148,6 +155,17 @@ class Masterfile(object):
         data = json.load(open(filename, 'r'))
         data['root_path'] = path.dirname(filename)
         return data
+
+    def _build_joined_data(self):
+        joined = pd.concat(
+            self._dataframes,
+            axis='columns',
+            join='outer',
+            sort=False)
+        joined.index.name = self.index_column
+        column_sort_fx = make_column_sorter(self.ordering_list)
+        columns_sorted = sorted(joined.columns, key=column_sort_fx)
+        return joined[columns_sorted]
 
     def _load_dictionary(self):
         if self.root_path is None:
@@ -241,3 +259,47 @@ def read_csv_no_alterations(csv_file):
     df = df.rename(
         columns=df.iloc[0], copy=False).iloc[1:].reset_index(drop=True)
     return df
+
+"""
+Functions used to sort masterfile columns
+"""
+
+def infinity():
+    return math.inf
+
+def column_sort_dict(ordering):
+    """
+    Returns a dict mapping orderings to their position in the list, and
+    infinity for items not found
+    """
+    ordering_dict = defaultdict(infinity)
+    for i, value in enumerate(ordering):
+        ordering_dict[value] = i
+    return ordering_dict
+
+
+def make_column_sorter(component_orderings):
+    """
+    Returns a function that will sort masterfile columns.
+
+    component_orderings should be a nested list. The outer list should be the
+    same length as the masterfile's components, and the inner list should have
+    the values in the order you want to see them in the masterfile.
+    """
+
+    comp_sort_dicts = [
+        column_sort_dict(ordering)
+        for ordering in component_orderings
+    ]
+
+    def sort_key(column_name):
+        components = column_name.split("_")
+        component_sorts = [
+            (comp_dict[comp], comp)
+            for comp, comp_dict in zip(components, comp_sort_dicts)
+        ]
+        return tuple(
+            component_sorts
+        )
+
+    return sort_key

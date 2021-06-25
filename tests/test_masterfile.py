@@ -72,3 +72,8 @@ class TestMasterfile(object):
         mf = masterfile.load(good_path)
         assert mf.dictionary is not None
         assert mf.df.sr_t1_foo_var1.contact['measure_foo'] == 'Jordan'
+
+    def test_orderings(self, good_path):
+        mf = masterfile.load(good_path)
+        assert "variable" in mf.orderings
+        assert mf.ordering_list[-1] == ["var2", "sum", "var1"]

@@ -1,4 +1,7 @@
 {
   "index_column": "ppt_id",
-  "components": ["modality", "timepoint", "measure", "variable"]
+  "components": ["modality", "timepoint", "measure", "variable"],
+  "orderings": {
+    "variable": ["var2", "sum", "var1"]
+  }
 }
