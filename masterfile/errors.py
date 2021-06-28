@@ -76,9 +76,13 @@ class DictionaryIndexNotFoundError(DictionaryError):
 class SettingsError(Error):
     code = 'E8'
 
-
+# No longer used, artifact of when settings were in JSON
 class JSONError(SettingsError):
     code = 'E801'
+
+
+class YAMLError(SettingsError):
+    code = 'E802'
 
 
 class IOError(Error):

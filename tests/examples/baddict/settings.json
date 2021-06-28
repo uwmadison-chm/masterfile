@@ -1,4 +1,0 @@
-{
-  "index_column": "ppt_id",
-  "components": ["modality", "timepoint", "measure", "variable"]
-}

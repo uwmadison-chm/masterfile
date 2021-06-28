@@ -10,13 +10,13 @@ from __future__ import absolute_import, unicode_literals
 
 from collections import defaultdict
 from glob import glob
-import json
 import math
 from os import path
 
-import pandas as pd
-
 import attr
+import pandas as pd
+import yaml
+
 from . import errors
 from . import dictionary
 from . import annotator
@@ -38,15 +38,15 @@ LINE_ENDING = "\r\n"
 class Masterfile(object):
 
     # The name of the column with participant identifiers.
-    # Generally read from settings.json
+    # Generally read from settings.yml
     index_column = attr.ib(default=None)
 
     # The set of components of column names - for example, things such as
     # modality, timepoint, and measure name.
-    # Generally read from settings.json
+    # Generally read from settings.yml
     components = attr.ib(default=None)
 
-    # The path of the masterfile. Must contain a settings.json file.
+    # The path of the masterfile. Must contain a settings.yml
     root_path = attr.ib(default=None)
 
     # A list of errors that occurred while trying to read the data. Note that
@@ -113,21 +113,20 @@ class Masterfile(object):
 
     @classmethod
     def find_settings_file_and_construct(klass, root_path):
-        json_data = None
         settings_file = klass._settings_filename(root_path)
         mf = klass()
         try:
-            json_data = klass._read_settings_json(settings_file)
-            mf = klass(**json_data)
+            settings = klass._read_settings(settings_file)
+            mf = klass(**settings)
         except IOError as e:
             mf.errors.append(errors.FileReadError(
                 locations=[errors.Location(settings_file)],
                 message="Can't read settings file",
                 root_exception=e))
         except ValueError as e:
-            mf.errors.append(errors.JSONError(
+            mf.errors.append(errors.YAMLError(
                 locations=[errors.Location(settings_file)],
-                message="JSON reading error",
+                message="YAML reading error",
                 root_exception=e))
         return mf
 
@@ -144,15 +143,15 @@ class Masterfile(object):
 
     @classmethod
     def _settings_filename(klass, root_path):
-        return path.join(str(root_path), "settings.json")
+        return path.join(str(root_path), "settings.yml")
 
     @classmethod
-    def _read_settings_json(klass, filename):
+    def _read_settings(klass, filename):
         """
-        load root_path/settings.json, parse it, and return a dict with its
+        load root_path/settings.yml, parse it, and return a dict with its
         contents.
         """
-        data = json.load(open(filename, 'r'))
+        data = yaml.safe_load(open(filename, 'r'))
         data['root_path'] = path.dirname(filename)
         return data
 
