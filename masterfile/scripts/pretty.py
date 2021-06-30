@@ -35,51 +35,43 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def column_to_tuples(colname, components):
-    column_parts = colname.split('_')
-    return [
-        (colname, '_'.join(dict_key)) for dict_key in zip(
-            components, column_parts)
-    ]
+def item_row_dict(mf, column, component, part):
+    dict_df = mf.dictionary.dataframe
+    row_dict = {
+        'item': column,
+        'compoment': component,
+        'value': part
+    }
+    try:
+        dict_entry = dict_df.loc[(component, part)]
+        row_dict.update(dict_entry)
+    except KeyError:
+        logger.warn(f"{(component, part)} not found in dictionary")
+    return row_dict
 
 
-def columns_to_tuples(columns, components):
-    return list(chain(*[column_to_tuples(c, components) for c in columns]))
+def make_pretty_df(mf, condense=True):
+    df = mf.dataframe
+    cols = df.columns
+    last_seen_most_sig = None
+    df_data = []
+    for col in cols:
+        col_parts = col.split("_")
+        components = mf.components
+        most_sig_parts = col_parts[:-1]
+        if last_seen_most_sig == most_sig_parts and condense:
+            col_parts = col_parts[-1:]
+            components = components[-1:]
+        for part, component in zip(col_parts, components):
+            df_data.append(item_row_dict(mf, col, component, part))
+        last_seen_most_sig = most_sig_parts
+    return pandas.DataFrame(df_data)
 
 
-def columns_to_index(columns, components):
-    return pandas.MultiIndex.from_tuples(
-        columns_to_tuples(columns, components))
-
-
-def populate_pretty_df(df, mf):
-    d = mf.dictionary
-    for index_val, dict_entries in d.df.iterrows():
-        logger.debug('Working on {}'.format(index_val))
-        key = '_'.join(index_val)
-        for dict_col, value in dict_entries.iteritems():
-            try:
-                df.loc[pandas.IndexSlice[:, key], dict_col] = value
-            except KeyError:
-                logger.warn(
-                    'Dictionary contains unused entry {}'.format(index_val))
-
-
-def allocate_pretty_df(mf):
-    ix = columns_to_index(mf.df.columns, mf.components)
-    cols = mf.dictionary.columns
-    return pandas.DataFrame(index=ix, columns=cols, dtype=object)
-
-
-def write_pretty_dictionary(mf_path, output):
+def write_pretty_dictionary(mf_path, output, condense=True):
     mf = masterfile.load(mf_path)
-    pretty_df = allocate_pretty_df(mf)
-    pretty_df = pretty_df[~pretty_df.index.duplicated(keep='first')]
-    original_index = pretty_df.index
-    pretty_df.sort_index(inplace=True)
-    populate_pretty_df(pretty_df, mf)
-    reindexed = pretty_df.reindex(index=original_index)
-    reindexed.to_csv(output, line_terminator=LINE_ENDING)
+    pretty = make_pretty_df(mf, condense)
+    pretty.to_csv(output, index=False)
     return 0
 
 
@@ -90,7 +82,7 @@ def main(args):
     output = args.out_file
     if output == '-':
         output = sys.stdout
-    return write_pretty_dictionary(args.masterfile_path, output)
+    return write_pretty_dictionary(args.masterfile_path, output, args.condense)
 
 
 if __name__ == '__main__':

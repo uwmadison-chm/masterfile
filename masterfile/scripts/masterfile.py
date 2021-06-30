@@ -38,6 +38,19 @@ def make_parser():
     pretty.add_argument(
         'masterfile_path', help="Path to the masterfile to use")
     pretty.add_argument(
+        '--condense',
+        dest='condense',
+        action='store_true',
+        help='Print a less-repetitive amount of data'
+    )
+    pretty.add_argument(
+        '--no-condense',
+        dest='condense',
+        action='store_false',
+        help='Print a more-repetitive amount of data'
+    )
+    pretty.set_defaults(condense=True)
+    pretty.add_argument(
         'out_file', help="Path to the output file or - for STDOUT")
 
     join = subparsers.add_parser('join', help='Make joined data')
