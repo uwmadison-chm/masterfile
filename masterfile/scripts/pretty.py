@@ -51,6 +51,20 @@ def item_row_dict(mf, column, component, part):
 
 
 def make_pretty_df(mf, condense=True):
+    """
+    Make a dictionary-equivalent that lists every single column in the
+    masterfile, along with any dictionary metadata that goes with it.
+    The 'condense' option avoids printing overly-repetitive data.
+
+    In this case, "overly-repetitive" means it won't repeat components if
+    only the last component changes -- so, for example, if you have
+    sr_panas_pa
+    sr_panas_na
+    sr_ffmq_observe
+    sr_ffmq_actAware
+
+    sr and panas will only be printed for sr_panas_pa and sr_ffmq_observe
+    """
     df = mf.dataframe
     cols = df.columns
     last_seen_most_sig = None
