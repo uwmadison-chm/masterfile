@@ -29,6 +29,7 @@ logger.setLevel(logging.INFO)
 def make_joined_data(masterfile_path, output_file):
     mf = masterfile.load(masterfile_path)
     mf.dataframe.to_csv(output_file, line_terminator=LINE_ENDING)
+    return 0
 
 
 def main(args):
@@ -39,7 +40,7 @@ def main(args):
     if output == '-':
         logger.info("stdout")
         output = sys.stdout
-    make_joined_data(args.masterfile_path, output)
+    return make_joined_data(args.masterfile_path, output)
 
 
 if __name__ == '__main__':
