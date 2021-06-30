@@ -160,7 +160,7 @@ class Masterfile(object):
             self._dataframes,
             axis='columns',
             join='outer',
-            sort=False)
+            sort=False).sort_index()
         joined.index.name = self.index_column
         column_sort_fx = make_column_sorter(self.ordering_list)
         columns_sorted = sorted(joined.columns, key=column_sort_fx)
