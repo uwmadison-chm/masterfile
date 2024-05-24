@@ -1,6 +1,7 @@
 component,short_name
 modality,sr
 timepoint,t1
+timepoint,3mo
 variable,sum
 variable,var1
 variable,var2

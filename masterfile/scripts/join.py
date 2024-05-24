@@ -21,14 +21,15 @@ import masterfile
 from masterfile.masterfile import LINE_ENDING
 
 import logging
-logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+
+logging.basicConfig(level=logging.DEBUG, format="%(message)s")
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
 def make_joined_data(masterfile_path, output_file):
     mf = masterfile.load(masterfile_path)
-    mf.dataframe.to_csv(output_file, line_terminator=LINE_ENDING)
+    mf.dataframe.to_csv(output_file, lineterminator=LINE_ENDING)
     return 0
 
 
@@ -37,11 +38,10 @@ def main(args):
         logger.setLevel(logging.DEBUG)
     logger.debug(args)
     output = args.out_file
-    if output == '-':
-        logger.info("stdout")
+    if output == "-":
         output = sys.stdout
     return make_joined_data(args.masterfile_path, output)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
