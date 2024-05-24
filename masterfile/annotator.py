@@ -50,7 +50,7 @@ class Annotator(object):
 
     def annotate_dataframe(self, df):
         df._metadata = list(self.dictionary.columns)
-        for series_name, series in df.iteritems():
+        for series_name, series in df.items():
             self.annotate_series(series)
 
     def make_series_annotations(self, series_name):
@@ -71,7 +71,7 @@ class Annotator(object):
         """
         d = defaultdict(dict)
         for comp, val in self.masterfile.column_components(series_name):
-            label = '{}_{}'.format(comp, val)
+            label = "{}_{}".format(comp, val)
             component_annotations = self.dictionary.annotations_for(comp, val)
             for ann_label, ann_value in component_annotations.items():
                 d[ann_label][label] = ann_value
